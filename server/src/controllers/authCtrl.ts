@@ -2,13 +2,11 @@ import { Request, Response } from "express";
 import User, { IUser } from "../models/User";
 import bcrypt from 'bcrypt';
 import { generateAccessToken, generateActiveToken, generateRefreshToken } from "../utils/generateToken";
-import { BASE_URL } from "../utils/globals";
 import sendMail from "../utils/sendMail";
 import { validEmail } from "../utils/valid";
 import { verify } from "jsonwebtoken";
 import { IToken } from "../utils/interface";
 
-const CLIENT_URL = BASE_URL;
 
 const authCtrl = {
     register: async (req: Request, res: Response) => {
@@ -37,7 +35,7 @@ const authCtrl = {
 
             const active_token = generateActiveToken({ newUser });
 
-            const url = `${CLIENT_URL}/active/${active_token}`;
+            const url = `${process.env.CLIENT_URL}/active/${active_token}`;
             const SENDER_MAIL = `${process.env.SENDER_EMAIL}`;
             const txt = "Verify Your Email Address";
             const mailOptions = {
@@ -52,7 +50,7 @@ const authCtrl = {
             <!--  Font  -->
               
                           <h2 style="text-align: center; text-transform: uppercase;color: #1C99E8;">Welcome to the V-NETWORK Website.</h2>
-              <p>Congratulations! You're almost set to start using <a href="${CLIENT_URL}" target="_blank" rel="noopener noreferrer">V-NETWORK.</a>
+              <p>Congratulations! You're almost set to start using <a href="${process.env.CLIENT_URL}" target="_blank" rel="noopener noreferrer">V-NETWORK.</a>
                               Just click the button below to activate your email address!
                           </p>
                           
