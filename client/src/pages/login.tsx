@@ -22,7 +22,7 @@ const Login: FC<LoginProps> = ({ }) => {
     };
     return <div>
         <Head>
-            <title>V-NETWORK - Login</title>
+            <title>V-NETWORK | Login</title>
         </Head>
 
 
@@ -33,7 +33,7 @@ const Login: FC<LoginProps> = ({ }) => {
                     <Input placeholder='Email Address' />
                     <Input placeholder='Password' />
 
-                    <button className='btn-primary p-2' onChange={ (e) => console.log('') }>Login</button>
+                    <button className='btn-primary p-2 w-full' onChange={ (e) => console.log('') }>Login</button>
                 </form>
             </div>
         </div>
