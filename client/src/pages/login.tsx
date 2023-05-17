@@ -1,5 +1,6 @@
 "use client";
 import Input from '@/components/Input';
+import Layout from '@/components/Layout';
 import { login } from '@/features/auth/auth';
 import { startLoading, stopLoading } from '@/features/global/global';
 import { AppDispatch } from '@/features/store';
@@ -39,7 +40,7 @@ const Login: FC<LoginProps> = ({ }) => {
 
         dispatch(stopLoading());
     };
-    return <div>
+    return <Layout>
         <Head>
             <title>V-NETWORK | Login</title>
         </Head>
@@ -58,7 +59,7 @@ const Login: FC<LoginProps> = ({ }) => {
             </div>
         </div>
 
-    </div>;
+    </Layout>;
 };
 
 export default Login;

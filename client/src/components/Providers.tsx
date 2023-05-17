@@ -1,6 +1,6 @@
 'use client';
 
-import { store } from '@/features/store';
+import { AppDispatch, store } from '@/features/store';
 import { FC, ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
@@ -11,6 +11,7 @@ interface ProvidersProps {
 }
 
 const Providers: FC<ProvidersProps> = ({ children }) => {
+
   return (
     <>
       <Toaster position='top-center' reverseOrder={ false } />

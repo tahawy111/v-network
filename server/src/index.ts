@@ -16,7 +16,10 @@ mongoose.connect(`${process.env.DATABASE_URL}`).then(() => console.log("DB Conne
 // App Configuration
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+    origin: true,
+    credentials: true,
+}));
 app.use(cookieParser());
 
 

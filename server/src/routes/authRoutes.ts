@@ -7,7 +7,7 @@ router.post('/register', authCtrl.register);
 router.post('/login', authCtrl.login);
 router.post('/active', authCtrl.active);
 router.post('/logout', authCtrl.logout);
-router.post('/generateAccessToken', authCtrl.generateAccessToken);
+router.get('/refresh_token', authCtrl.generateAccessToken);
 
 
 export default router;

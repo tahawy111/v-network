@@ -97,7 +97,7 @@ const authCtrl = {
                 maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
             });
 
-            res.json({ msg: "Register Success!", access_token, user });
+            res.json({ msg: "Register Success!", refresh_token, user });
         } catch (error: any) {
             return res.status(400).json({ msg: error.message });
         }
@@ -139,12 +139,16 @@ const authCtrl = {
     },
     generateAccessToken: async (req: Request, res: Response) => {
         try {
+            // console.log(req.cookies.refreshtoken);
+
             const rf_token = req.cookies.refreshtoken;
             if (!rf_token) return res.status(400).json({ msg: "Please Login Now!" });
 
             const { id } = <IToken>(verify(rf_token, `${process.env.REFRESH_TOKEN_SECRET}`));
+            
             if (!id) return res.status(400).json({ msg: "Please Login Now!" });
             const user = await User.findById(id).select("-password").populate("followers following", '-password');
+            
             if (!user) return res.status(400).json({ msg: "Please Login Now!" });
             const access_token = generateAccessToken({ id });
 
