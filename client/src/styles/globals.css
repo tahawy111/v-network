@@ -60,7 +60,7 @@ h6 {
 input,
 textarea,
 select {
-  @apply border border-gray-200 rounded-sm py-2 w-full mb-2 shadow-sm px-1;
+  @apply border border-gray-200 rounded-sm py-2 w-full mb-2 shadow-sm px-1 bg-slate-100;
 }
 input:focus,
 textarea:focus,

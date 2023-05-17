@@ -2,6 +2,7 @@ import { Schema, model } from 'mongoose';
 
 // 1. Create an interface representing a document in MongoDB.
 export interface IUser {
+    fullname:string;
     username: string;
     email: string;
     password: string;
@@ -19,6 +20,7 @@ export interface IUser {
 
 // 2. Create a Schema corresponding to the document interface.
 const userSchema = new Schema<IUser>({
+    fullname: { type: String, default: "" },
     username: { type: String, required: true, trim: true, maxlength: 25, unique: true },
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
