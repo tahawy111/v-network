@@ -42,7 +42,7 @@ const Login: FC<LoginProps> = ({ }) => {
     };
     return <Layout>
         <Head>
-            <title>V-NETWORK | Login</title>
+            <title>V-NETWORK - Login</title>
         </Head>
 
 

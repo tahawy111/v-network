@@ -47,21 +47,28 @@ const Login: FC<LoginProps> = ({ }) => {
     };
     return <Layout>
         <Head>
-            <title>V-NETWORK | Login</title>
+            <title>V-NETWORK - Register</title>
         </Head>
 
 
         <div className="flex justify-center w-full h-screen items-center">
             <div className="border-2 max-w-sm p-5">
-                <h3 className="font-light text-center">V-NETWORK - Login</h3>
+                <h3 className="font-light text-center">V-NETWORK - Register</h3>
                 <form onSubmit={ handleSubmit }>
                     <Input placeholder='Full Name' name='fullname' value={ formData.fullname } onChange={ handleInputChange } />
                     <Input placeholder='Email Address' name='email' value={ formData.email } onChange={ handleInputChange } />
                     <Input type='password' placeholder='Password' name='password' value={ formData.password } onChange={ handleInputChange } />
                     <Input type='password' placeholder='Confirm Password' name='cf_password' value={ formData.cf_password } onChange={ handleInputChange } />
 
+               <div className='flex justify-between my-1'>
 
-                    <button className='btn-primary p-2 w-full'>Register</button>
+
+                <Input name='gender' placeholder='Male' type='radio' />
+                <Input name='gender' placeholder='Female' type='radio' />
+
+               </div>
+
+                        <button className='btn-primary p-2 w-full'>Register</button>
                 </form>
             </div>
         </div>

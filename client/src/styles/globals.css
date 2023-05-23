@@ -67,6 +67,9 @@ textarea:focus,
 select:focus {
   @apply outline-none border-blue-900;
 }
+input[type = "radio"] {
+  @apply mb-0
+}
 label {
   @apply text-sm text-gray-600 font-medium;
 }
