@@ -21,6 +21,17 @@ export const login = createAsyncThunk(
     }
   }
 );
+export const register = createAsyncThunk(
+  "auth/register",
+  async (user: any, thunkAPI) => {
+    try {
+      const res = await axios.post(`${process.env.API}/api/auth/register`, user);
+      return thunkAPI.fulfillWithValue(res.data);
+    } catch (error: any) {
+      return thunkAPI.rejectWithValue(getError(error));
+    }
+  }
+);
 
 export interface AuthState {
   user: IUser | object | null;
@@ -74,6 +85,26 @@ export const authSlice = createSlice({
     });
     builder.addCase(
       login.rejected,
+      (state: AuthState, action) => {
+        toast.error(`${action.payload}`);
+        return { ...state, message: action.payload as string };
+      }
+    );
+    // register
+    builder.addCase(register.pending, (state: AuthState) => {
+      return { ...state, message: null, access_token: null, isLoggedIn: false };
+    });
+    builder.addCase(register.fulfilled, (state: AuthState, action) => {
+      toast.success(`${action.payload.msg}`);
+      return {
+        ...state,
+        user: action.payload,
+        message: action.payload.msg,
+        isLoggedIn: false
+      };
+    });
+    builder.addCase(
+      register.rejected,
       (state: AuthState, action) => {
         toast.error(`${action.payload}`);
         return { ...state, message: action.payload as string };

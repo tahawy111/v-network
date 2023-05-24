@@ -1,7 +1,7 @@
 "use client";
 import Input from '@/components/Input';
 import Layout from '@/components/Layout';
-import { login } from '@/features/auth/auth';
+import { login, register } from '@/features/auth/authSlice';
 import { startLoading, stopLoading } from '@/features/global/global';
 import { AppDispatch } from '@/features/store';
 import { validEmail } from '@/lib/validation';
@@ -41,7 +41,7 @@ const Login: FC<LoginProps> = ({ }) => {
         if (formData.password !== formData.cf_password) return toast.error("Password isn't match");
         dispatch(startLoading());
 
-        await dispatch(login({ fullname: formData.fullname, email: formData.email, password: formData.password }));
+        await dispatch(register({ fullname: formData.fullname, email: formData.email, password: formData.password }));
 
         dispatch(stopLoading());
     };
@@ -52,7 +52,7 @@ const Login: FC<LoginProps> = ({ }) => {
 
 
         <div className="flex justify-center w-full h-screen items-center">
-            <div className="border-2 max-w-sm p-5">
+            <div className="border-2 max-w-sm p-5 ">
                 <h3 className="font-light text-center">V-NETWORK - Register</h3>
                 <form onSubmit={ handleSubmit }>
                     <Input placeholder='Full Name' name='fullname' value={ formData.fullname } onChange={ handleInputChange } />
@@ -60,15 +60,15 @@ const Login: FC<LoginProps> = ({ }) => {
                     <Input type='password' placeholder='Password' name='password' value={ formData.password } onChange={ handleInputChange } />
                     <Input type='password' placeholder='Confirm Password' name='cf_password' value={ formData.cf_password } onChange={ handleInputChange } />
 
-               <div className='flex justify-between my-1'>
+                    <div className='flex justify-between my-1'>
 
 
-                <Input name='gender' placeholder='Male' type='radio' />
-                <Input name='gender' placeholder='Female' type='radio' />
+                        <Input name='gender' placeholder='Male' type='radio' />
+                        <Input name='gender' placeholder='Female' type='radio' />
 
-               </div>
+                    </div>
 
-                        <button className='btn-primary p-2 w-full'>Register</button>
+                    <button className='btn-primary p-2 w-full'>Register</button>
                 </form>
             </div>
         </div>

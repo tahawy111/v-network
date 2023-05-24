@@ -1,7 +1,7 @@
 "use client";
 import Input from '@/components/Input';
 import Layout from '@/components/Layout';
-import { login } from '@/features/auth/auth';
+import { login } from '@/features/auth/authSlice';
 import { startLoading, stopLoading } from '@/features/global/global';
 import { AppDispatch } from '@/features/store';
 import { validEmail } from '@/lib/validation';

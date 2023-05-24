@@ -1,4 +1,4 @@
-import { setUser } from '@/features/auth/auth';
+import { setUser } from '@/features/auth/authSlice';
 import { startLoading, stopLoading } from '@/features/global/global';
 import { AppDispatch } from '@/features/store';
 import { getError } from '@/lib/getError';
