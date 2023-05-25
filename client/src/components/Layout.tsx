@@ -7,6 +7,7 @@ import Cookies from 'js-cookie';
 import { DetailedHTMLProps, FC, HTMLAttributes, ReactNode, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
+import Header from '../../components/Header';
 
 interface LayoutProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     children: ReactNode;
@@ -31,7 +32,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         fetchData();
     }, [dispatch]);
 
-    return <div>{ children }</div>;
+    return <div>
+        <Header />
+        { children }</div>;
 };
 
 export default Layout;

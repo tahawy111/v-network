@@ -97,7 +97,7 @@ const authCtrl = {
                 maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
             });
 
-            res.json({ msg: "Register Success!", refresh_token, user });
+            res.json({ msg: "Login Success!", refresh_token, user });
         } catch (error: any) {
             return res.status(400).json({ msg: error.message });
         }

@@ -7,6 +7,7 @@ import { AppDispatch } from '@/features/store';
 import { validEmail } from '@/lib/validation';
 import { IFormProps, InputChange } from '@/types/typescript';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { FC, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
@@ -17,6 +18,7 @@ interface LoginProps {
 
 const Login: FC<LoginProps> = ({ }) => {
     const dispatch: AppDispatch = useDispatch();
+    const router = useRouter()
     interface ILoginProps {
         email: string;
         password: string;
@@ -37,8 +39,8 @@ const Login: FC<LoginProps> = ({ }) => {
         dispatch(startLoading());
 
         await dispatch(login(formData));
-
         dispatch(stopLoading());
+        router.push('/')
     };
     return <Layout>
         <Head>
