@@ -20,17 +20,17 @@ export default function Header({ }: HeaderProps) {
     setMobileNavActive(false);
   }, []);
 
-  return <nav className={`w-full bg-main md:h-16 text-white flex md:items-center ${mobileNavActive ? `h-screen items-start fixed` : "items-center"}`}>
+  return <nav className={`w-full bg-main h-16 text-white flex md:items-center ${mobileNavActive ? `h-screen md:h-16 items-start fixed` : "items-center"}`}>
     {/* Start Nav */ }
-    <div className="flex justify-between items-start w-full flex-col gap-3 m-3 md:flex-row md:items-center">
-     <div className="w-full md:flex md:flex-row items-center container md:mx-auto justify-between flex gap-3">
+    <div className="flex justify-between items-start w-full flex-col gap-3 m-3 md:flex-row md:items-center md:mx-auto container">
+     <div className="w-full md:flex md:flex-row items-center justify-between flex gap-3">
       <h1 className="text-2xl font-semibold">V-Network</h1>
 
-      <svg onClick={() => setMobileNavActive((prev) => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-6 h-6 md:hidden mx-2">
+      <svg onClick={() => setMobileNavActive((prev) => !prev)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-7 h-7 md:hidden mx-2">
         <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
       </svg>
      </div>
-      <ul className={`gap-x-2 md:flex p-3 ${mobileNavActive ? "block" : "hidden"}`}>
+      <ul className={`gap-x-2 md:flex ${mobileNavActive ? "block" : "hidden"}`}>
         <li>
           <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
             <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
