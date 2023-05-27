@@ -20,39 +20,29 @@ export default function Header({ }: HeaderProps) {
   const [mobileNavActive, setMobileNavActive] = useState<boolean>(true);
   const { theme, setTheme } = useTheme();
   const isActive = (path: string): boolean => {
-    const { pathname } = useRouter();
-    if (path === "/" && path === pathname) return true;
-    if (pathname.includes(path)) return true;
+    if (router.pathname === path) return true;
     return false;
   };
 
   useEffect(() => {
     setMobileNavActive(false);
   }, []);
+  const normalLink = `dark:text-white md:text-slate-100 text-slate-800`;
+  const nonActiveLink = normalLink + " opacity-50";
+  const activeLink = normalLink + " opacity-100";
 
-  const activeLink = "opacity-100";
-  const nonActiveLink = "opacity-60";
-
-  return <nav className={ `w-full bg-main h-16 text-white flex md:items-center ${mobileNavActive ? `h-screen md:h-16 items-start fixed` : "items-center"}` }>
+  return <nav className={ `w-full bg-main text-white flex md:items-center` }>
     {/* Start Nav */ }
     <div className="flex justify-between items-start w-full flex-col gap-3 m-3 md:flex-row md:items-center md:mx-auto container">
-      <div className={ `md:w-fit md:flex w-full md:flex-row items-center justify-between flex gap-3` }>
-        <Link href={ `/` } className="text-2xl font-semibold uppercase">V-Network</Link>
-
-
-        {/* Menu Bars */ }
-        <svg onClick={ () => setMobileNavActive((prev) => !prev) } xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-7 h-7 md:hidden mx-2">
-          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
-        </svg>
-        {/* Menu Bars */ }
-
+      <div className={ `md:w-fit md:flex w-full md:flex-row items-center justify-between flex gap-3 flex-col` }>
+        <Link href={ `/` } className="text-2xl font-semibold uppercase text-white">V-Network</Link>
       </div>
 
-      <Search mobileNavActive={ mobileNavActive } />
+      <Search />
 
-      <ul className={ `gap-3 items-center flex ${mobileNavActive ? "flex-col md:flex-row" : "hidden md:flex"}` }>
+      <ul className={ `md:gap-3 gap-0 items-center md:justify-normal justify-evenly flex md:static fixed bottom-0 left-0 w-full md:w-fit shadow-sm shadow-black p-2 dark:shadow-white md:shadow-none` }>
         <li>
-          <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={ `w-6 h-6 ${isActive('/') ? activeLink : nonActiveLink}` }>
+          <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={ `w-6 h-6 ${isActive(`/`) ? activeLink : nonActiveLink}` }>
             <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
             <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
           </svg>
@@ -77,10 +67,10 @@ export default function Header({ }: HeaderProps) {
         <li>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="group" asChild>
-              <span className="flex items-center w-12 ml-4 md:ml-0">
+              <span className="flex items-center w-12 md:ml-0">
                 <div><img className="select-none w-10 md:w-20" src={ user?.avatar } /></div>
 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-black dark:text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </span>

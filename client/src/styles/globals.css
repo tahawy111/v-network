@@ -5,7 +5,7 @@
 input,
 textarea,
 select {
-  @apply border border-gray-200 rounded-sm py-2 mt-1 w-full shadow-sm px-1 bg-slate-100;
+  @apply border border-gray-200 rounded-sm py-2 mt-1 w-full shadow-sm px-1;
 }
 input:focus,
 textarea:focus,

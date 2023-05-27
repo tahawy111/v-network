@@ -62,7 +62,7 @@ const Login: FC<LoginProps> = ({ }) => {
                 <form onSubmit={ handleSubmit }>
                     <Input placeholder='Full Name' name='fullname' value={ formData.fullname } onChange={ handleInputChange } />
                     <Input placeholder='User Name' name='username' value={ formData.username } onChange={ handleInputChange } />
-                    <Input placeholder='Email Address' type='email' name='email' value={ formData.email } onChange={ handleInputChange } />
+                    <Input placeholder='Email Address' type='text' name='email' value={ formData.email } onChange={ handleInputChange } />
                     <Input type='password' placeholder='Password' name='password' value={ formData.password } onChange={ handleInputChange } />
                     <Input type='password' placeholder='Confirm Password' name='cf_password' value={ formData.cf_password } onChange={ handleInputChange } />
 
