@@ -6,6 +6,7 @@ import { AppDispatch, RootState } from "@/features/store";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
 import { useEffect, useState } from "react";
+import { useTheme } from 'next-themes';
 
 interface HeaderProps {
 
@@ -16,6 +17,7 @@ export default function Header({ }: HeaderProps) {
   const dispatch: AppDispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.auth);
   const [mobileNavActive, setMobileNavActive] = useState<boolean>(true);
+  const { theme, setTheme } = useTheme();
   const isActive = (path: string): boolean => {
     const { pathname } = useRouter();
     if (path === "/" && path === pathname) return true;
@@ -41,7 +43,7 @@ export default function Header({ }: HeaderProps) {
         </svg>
         {/* Menu Bars */ }
       </div>
-      <ul className={ `gap-3 flex ${mobileNavActive ? "flex-col md:flex-row" : "hidden md:flex"}` }>
+      <ul className={ `gap-3 items-center flex ${mobileNavActive ? "flex-col md:flex-row" : "hidden md:flex"}` }>
         <li>
           <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={ `w-6 h-6 ${isActive('/') ? activeLink : nonActiveLink}` }>
             <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
@@ -68,10 +70,10 @@ export default function Header({ }: HeaderProps) {
         <li>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="group" asChild>
-              <span className="flex items-end">
-                <span className="select-none">User</span>
+              <span className="flex items-center">
+                <div><img className="select-none w-20" src={ user?.avatar } /></div>
 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 relative group-active:rotate-180 group-data-[state=open]:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </span>
@@ -79,14 +81,14 @@ export default function Header({ }: HeaderProps) {
 
             <DropdownMenu.Portal>
               <DropdownMenu.Content
-                className="min-w-[220px] bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
+                className="dark:text-black min-w-[220px] bg-white rounded-md p-[5px] shadow-[0px_10px_38px_-10px_rgba(22,_23,_24,_0.35),_0px_10px_20px_-15px_rgba(22,_23,_24,_0.2)] will-change-[opacity,transform] data-[side=top]:animate-slideDownAndFade data-[side=right]:animate-slideLeftAndFade data-[side=bottom]:animate-slideUpAndFade data-[side=left]:animate-slideRightAndFade"
                 sideOffset={ 5 }
               >
                 <DropdownMenu.Item className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
                   <Link href={ `/profile/${user?._id}` }>Profile</Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
-                  Dark Mode
+                <DropdownMenu.Item onClick={ () => theme === "dark" ? setTheme("light") : setTheme("dark") } className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
+                  { theme === "dark" ? "Light Mode" : "Dark Mode" }
                 </DropdownMenu.Item>
 
                 <hr />

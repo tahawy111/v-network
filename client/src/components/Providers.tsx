@@ -5,6 +5,7 @@ import { FC, ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
 import Spinner from './Spinner';
+import { ThemeProvider } from 'next-themes';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -15,10 +16,12 @@ const Providers: FC<ProvidersProps> = ({ children }) => {
   return (
     <>
       <Toaster position='top-center' reverseOrder={ false } />
-      <Provider store={ store }>
-        <Spinner />
-        { children }
-      </Provider>
+      <ThemeProvider enableSystem={true} attribute='class'>
+        <Provider store={ store }>
+          <Spinner />
+          { children }
+        </Provider>
+      </ThemeProvider>
     </>
   );
 };

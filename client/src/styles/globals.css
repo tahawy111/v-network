@@ -50,13 +50,3 @@ table.basic a {
 .btn-dark {
   @apply bg-gray-800 text-gray-100 border border-gray-800 shadow-sm;
 }
-
-#theme:checked ~ .App {
-  filter: invert(1);
-}
-
-.App {
-  height: 100vh;
-  width: 100%;
-  background: #ddd;
-}
