@@ -39,7 +39,9 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     return <div>
         { access_token && <Header /> }
-        { children }</div>;
+        <input type="checkbox" id="theme" />
+        <div className="App">{ children }</div>
+    </div>;
 };
 
 export default Layout;

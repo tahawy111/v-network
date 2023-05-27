@@ -34,7 +34,7 @@ export const register = createAsyncThunk(
 );
 
 export interface AuthState {
-  user: IUser | object | null;
+  user: IUser | null;
   access_token: string | null;
   message: string | null;
   isLoggedIn: boolean;

@@ -38,7 +38,7 @@ table.basic a {
   @apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
 }
 .btn-default,
-.btn-red {
+.btn-red,.btn-dark {
   @apply px-4 py-1 rounded-sm;
 }
 .btn-red {
@@ -46,4 +46,17 @@ table.basic a {
 }
 .btn-default {
   @apply bg-white text-gray-800 border border-gray-200 shadow-sm;
+}
+.btn-dark {
+  @apply bg-gray-800 text-gray-100 border border-gray-800 shadow-sm;
+}
+
+#theme:checked ~ .App {
+  filter: invert(1);
+}
+
+.App {
+  height: 100vh;
+  width: 100%;
+  background: #ddd;
 }

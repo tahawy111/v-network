@@ -127,16 +127,16 @@ const authCtrl = {
                     .json({ msg: "Token is expired please try again!" });
         }
     },
-    logout: async (req: Request, res: Response) => {
-        try {
+    // logout: async (req: Request, res: Response) => {
+    //     try {
 
-            res.clearCookie("refreshtoken", { path: 'api/auth' });
+    //         res.clearCookie("refreshtoken", { path: 'api/auth' });
 
-            return res.json({ msg: "Logged out!" });
-        } catch (error: any) {
-            return res.status(400).json({ msg: error.message });
-        }
-    },
+    //         return res.json({ msg: "Logged out!" });
+    //     } catch (error: any) {
+    //         return res.status(400).json({ msg: error.message });
+    //     }
+    // },
     generateAccessToken: async (req: Request, res: Response) => {
         try {
             // console.log(req.cookies.refreshtoken);
