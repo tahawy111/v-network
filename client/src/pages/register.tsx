@@ -7,6 +7,7 @@ import { AppDispatch } from '@/features/store';
 import { validEmail } from '@/lib/validation';
 import { IFormProps, InputChange } from '@/types/typescript';
 import Head from 'next/head';
+import Link from 'next/link';
 import { FC, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
@@ -75,6 +76,9 @@ const Login: FC<LoginProps> = ({ }) => {
 
                     <button className='btn-primary p-2 w-full'>Register</button>
                 </form>
+                <span className='my-1 inline-block'>
+                    I already have an account <Link href='/login' className='text-red-500'>Login</Link>
+                </span>
             </div>
         </div>
 

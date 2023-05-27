@@ -3,14 +3,15 @@ import Input from '@/components/Input';
 import Layout from '@/components/Layout';
 import { login } from '@/features/auth/authSlice';
 import { startLoading, stopLoading } from '@/features/global/global';
-import { AppDispatch } from '@/features/store';
+import { AppDispatch, RootState } from '@/features/store';
 import { validEmail } from '@/lib/validation';
 import { IFormProps, InputChange } from '@/types/typescript';
 import Head from 'next/head';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 interface LoginProps {
 
@@ -18,7 +19,8 @@ interface LoginProps {
 
 const Login: FC<LoginProps> = ({ }) => {
     const dispatch: AppDispatch = useDispatch();
-    const router = useRouter()
+    const { access_token } = useSelector((state: RootState) => state.auth);
+    const router = useRouter();
     interface ILoginProps {
         email: string;
         password: string;
@@ -40,8 +42,11 @@ const Login: FC<LoginProps> = ({ }) => {
 
         await dispatch(login(formData));
         dispatch(stopLoading());
-        router.push('/')
+        router.push('/');
     };
+    // useEffect(() => {
+    //     if (access_token) router.push(`/`);
+    // }, [access_token, router]);
     return <Layout>
         <Head>
             <title>V-NETWORK - Login</title>
@@ -58,6 +63,9 @@ const Login: FC<LoginProps> = ({ }) => {
 
                     <button className='btn-primary p-2 w-full'>Login</button>
                 </form>
+                <span className='my-1 inline-block'>
+                    I don't have an account <Link href='/register' className='text-red-500'>Register</Link>
+                </span>
             </div>
         </div>
 
