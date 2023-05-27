@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "@/features/auth/authSlice";
 import { useEffect, useState } from "react";
 import { useTheme } from 'next-themes';
+import Search from "./Search";
 
 interface HeaderProps {
 
@@ -35,14 +36,20 @@ export default function Header({ }: HeaderProps) {
   return <nav className={ `w-full bg-main h-16 text-white flex md:items-center ${mobileNavActive ? `h-screen md:h-16 items-start fixed` : "items-center"}` }>
     {/* Start Nav */ }
     <div className="flex justify-between items-start w-full flex-col gap-3 m-3 md:flex-row md:items-center md:mx-auto container">
-      <div className="w-full md:flex md:flex-row items-center justify-between flex gap-3">
+      <div className={`md:w-fit md:flex w-full md:flex-row items-center justify-between flex gap-3`}>
         <h1 className="text-2xl font-semibold uppercase">V-Network</h1>
+
+
         {/* Menu Bars */ }
         <svg onClick={ () => setMobileNavActive((prev) => !prev) } xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-7 h-7 md:hidden mx-2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
         </svg>
         {/* Menu Bars */ }
+        
       </div>
+
+      <Search mobileNavActive={mobileNavActive} />
+      
       <ul className={ `gap-3 items-center flex ${mobileNavActive ? "flex-col md:flex-row" : "hidden md:flex"}` }>
         <li>
           <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={ `w-6 h-6 ${isActive('/') ? activeLink : nonActiveLink}` }>
@@ -70,8 +77,8 @@ export default function Header({ }: HeaderProps) {
         <li>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="group" asChild>
-              <span className="flex items-center">
-                <div><img className="select-none w-20" src={ user?.avatar } /></div>
+              <span className="flex items-center w-12">
+                <div><img className="select-none w-10 md:w-20" src={ user?.avatar } /></div>
 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

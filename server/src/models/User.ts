@@ -24,7 +24,7 @@ const userSchema = new Schema<IUser>({
     username: { type: String, required: true, trim: true, maxlength: 25, unique: true },
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
-    avatar: { type: String, default: "https://res.cloudinary.com/devatchannel/image/upload/v1602752402/avatar/avatar_cugq40.png" },
+    avatar: { type: String, default: "https://i.imgur.com/YY4LxJt.png" },
     role: { type: String, default: 'user' },
     gender: { type: String, default: 'male' },
     mobile: { type: String, default: '' },
