@@ -36,8 +36,8 @@ export default function Header({ }: HeaderProps) {
   return <nav className={ `w-full bg-main h-16 text-white flex md:items-center ${mobileNavActive ? `h-screen md:h-16 items-start fixed` : "items-center"}` }>
     {/* Start Nav */ }
     <div className="flex justify-between items-start w-full flex-col gap-3 m-3 md:flex-row md:items-center md:mx-auto container">
-      <div className={`md:w-fit md:flex w-full md:flex-row items-center justify-between flex gap-3`}>
-        <Link href={`/`} className="text-2xl font-semibold uppercase">V-Network</Link>
+      <div className={ `md:w-fit md:flex w-full md:flex-row items-center justify-between flex gap-3` }>
+        <Link href={ `/` } className="text-2xl font-semibold uppercase">V-Network</Link>
 
 
         {/* Menu Bars */ }
@@ -45,11 +45,11 @@ export default function Header({ }: HeaderProps) {
           <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 5.25h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5m-16.5 4.5h16.5" />
         </svg>
         {/* Menu Bars */ }
-        
+
       </div>
 
-      <Search mobileNavActive={mobileNavActive} />
-      
+      <Search mobileNavActive={ mobileNavActive } />
+
       <ul className={ `gap-3 items-center flex ${mobileNavActive ? "flex-col md:flex-row" : "hidden md:flex"}` }>
         <li>
           <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={ `w-6 h-6 ${isActive('/') ? activeLink : nonActiveLink}` }>
@@ -77,7 +77,7 @@ export default function Header({ }: HeaderProps) {
         <li>
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="group" asChild>
-              <span className="flex items-center w-12">
+              <span className="flex items-center w-12 ml-4 md:ml-0">
                 <div><img className="select-none w-10 md:w-20" src={ user?.avatar } /></div>
 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">

@@ -6,13 +6,12 @@ import sendMail from "../utils/sendMail";
 import { validEmail } from "../utils/valid";
 import { verify } from "jsonwebtoken";
 import { IToken } from "../utils/interface";
-import { IReqAuth } from "../types/typescript";
-
 
 const userCtrl = {
-    searchUsers: async (req: IReqAuth, res: Response) => {
+    searchUsers: async (req: Request, res: Response) => {
         try {
-            const users = await User.find({ username: { regex: req.query.username } }).limit(10).select("fullname username avatar");
+
+            const users = await User.find({ username: { $regex: req.query.username } }).limit(10).select("fullname username avatar");
             res.json({ users });
         } catch (error: any) {
             return res.status(400).json({ msg: error.message });
