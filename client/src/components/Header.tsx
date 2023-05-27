@@ -37,7 +37,7 @@ export default function Header({ }: HeaderProps) {
     {/* Start Nav */ }
     <div className="flex justify-between items-start w-full flex-col gap-3 m-3 md:flex-row md:items-center md:mx-auto container">
       <div className={`md:w-fit md:flex w-full md:flex-row items-center justify-between flex gap-3`}>
-        <h1 className="text-2xl font-semibold uppercase">V-Network</h1>
+        <Link href={`/`} className="text-2xl font-semibold uppercase">V-Network</Link>
 
 
         {/* Menu Bars */ }
