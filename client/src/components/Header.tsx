@@ -16,7 +16,7 @@ interface HeaderProps {
 export default function Header({ }: HeaderProps) {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
-  const { user } = useSelector((state: RootState) => state.auth);
+  const { user } = useSelector((state: RootState) => state.auth)!;
   const [mobileNavActive, setMobileNavActive] = useState<boolean>(true);
   const { theme, setTheme } = useTheme();
   const isActive = (path: string): boolean => {

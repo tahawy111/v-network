@@ -37,16 +37,22 @@ table.basic thead tr th {
 table.basic a {
   @apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
 }
-.btn-default,
-.btn-red,.btn-dark {
-  @apply px-4 py-1 rounded-sm;
+.btn-outline-dark,
+.btn-red,.btn-dark,.btn-green,.btn-outline-green {
+  @apply px-4 py-1 rounded-md border-2;
 }
 .btn-red {
-  @apply bg-red-500 text-white;
-}
-.btn-default {
-  @apply bg-white text-gray-800 border border-gray-200 shadow-sm;
+  @apply bg-red-600 text-white;
 }
 .btn-dark {
-  @apply bg-gray-800 text-gray-100 border border-gray-800 shadow-sm;
+  @apply bg-gray-800 text-white shadow-sm;
+}
+.btn-outline-dark {
+  @apply bg-white text-gray-800 border-gray-500 shadow-sm;
+}
+.btn-green {
+  @apply bg-teal-600 text-white shadow-sm;
+}
+.btn-outline-green {
+  @apply bg-white text-teal-600 border-teal-600 shadow-sm;
 }

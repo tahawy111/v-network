@@ -17,6 +17,16 @@ const userCtrl = {
             return res.status(400).json({ msg: error.message });
         }
     },
+    getUser: async (req: Request, res: Response) => {
+        try {
+
+            const user = await User.findById(req.params.id).select(`-password`);
+            if(!user) return res.status(400).json({msg:"User does not exist."})
+            res.json({ user });
+        } catch (error: any) {
+            return res.status(400).json({ msg: error.message });
+        }
+    },
 
 };
 

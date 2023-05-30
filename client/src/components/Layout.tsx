@@ -39,7 +39,10 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     return <div>
         { access_token && <Header /> }
-        { children }</div>;
+        <div className='container mx-auto'>
+        { children }
+        </div>
+        </div>;
 };
 
 export default Layout;
