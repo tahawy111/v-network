@@ -69,8 +69,10 @@ const Login: FC<LoginProps> = ({ }) => {
                     <div className='flex justify-between my-1'>
 
 
-                        <Input value={ formData.gender } onChange={ handleInputChange } name='gender' placeholder='Male' type='radio' />
-                        <Input value={ formData.gender } onChange={ handleInputChange } name='gender' placeholder='Female' type='radio' />
+
+                    <Input value={ "male" } onChange={ handleInputChange } name='gender' placeholder='Male' type='radio' />
+                    <Input value={ "female" } onChange={ handleInputChange } name='gender' placeholder='Female' type='radio' />
+
 
                     </div>
 

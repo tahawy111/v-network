@@ -59,8 +59,8 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
                 <div className='flex justify-between my-1'>
 
 
-                    <Input value={ userData.gender } onChange={ handleInputChange } name='gender' placeholder='Male' type='radio' />
-                    <Input value={ userData.gender } onChange={ handleInputChange } name='gender' placeholder='Female' type='radio' />
+                    <Input value={ "male" } onChange={ handleInputChange } name='gender' placeholder='Male' type='radio' />
+                    <Input value={ "female" } onChange={ handleInputChange } name='gender' placeholder='Female' type='radio' />
 
                 </div>
 
