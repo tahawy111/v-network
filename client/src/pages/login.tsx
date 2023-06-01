@@ -1,6 +1,6 @@
 "use client";
-import Input from '@/components/Input';
-import Layout from '@/components/Layout';
+import Input from '@/components/Custom-Ui/Input';
+import Layout from '@/components/Layout/Layout';
 import { login } from '@/features/auth/authSlice';
 import { startLoading, stopLoading } from '@/features/global/global';
 import { AppDispatch, RootState } from '@/features/store';

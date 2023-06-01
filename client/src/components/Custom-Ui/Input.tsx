@@ -4,9 +4,10 @@ import { FC, useId, useState } from 'react';
 interface InputProps extends React.DetailedHTMLProps<React.InputHTMLAttributes<HTMLInputElement>, HTMLInputElement> {
     placeholder: string;
     error?: string | null;
+    footer?: string;
 }
 
-const Input: FC<InputProps> = ({ placeholder, error, ...props }) => {
+const Input: FC<InputProps> = ({ placeholder, error, footer, ...props }) => {
     const inputId = useId();
     const [showPass, setShowPass] = useState<boolean>(false);
 
@@ -19,7 +20,9 @@ const Input: FC<InputProps> = ({ placeholder, error, ...props }) => {
             <label htmlFor={ inputId }>{ placeholder }</label>
             <input className={ clsx(props.type === "password" ? "mb-0" : "", props.className) } id={ inputId } placeholder={ placeholder } { ...props } type={ showPass && props.type === "password" ? "text" : props.type } />
             <span className='text-red-500'>{ error }</span>
-            { props.type === "password" && (<div className='mb-2 select-none' onClick={ () => setShowPass((prev) => !prev) }>{ showPass ? "Hide" : "Show" }</div>) }
+            <div className="flex justify-between">
+                {footer && <small className='text-red-500'>{ footer }</small> } { props.type === "password" && (<div className='mb-2 select-none' onClick={ () => setShowPass((prev) => !prev) }>{ showPass ? "Hide" : "Show" }</div>) }
+            </div>
         </div>;
 };
 

@@ -4,7 +4,7 @@ import { AppDispatch, store } from '@/features/store';
 import { FC, ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';
-import Spinner from './Spinner';
+import Spinner from '../Custom-Ui/Spinner';
 import { ThemeProvider } from 'next-themes';
 
 interface ProvidersProps {
