@@ -12,14 +12,11 @@ textarea:focus,
 select:focus {
   @apply outline-none border-blue-900;
 }
-input[type = "radio"] {
-  @apply mb-0
+input[type="radio"] {
+  @apply mb-0;
 }
 label {
   @apply text-sm text-gray-600 font-medium;
-}
-.btn-primary {
-  @apply bg-primary text-white px-4 rounded-sm font-semibold shadow-sm;
 }
 .btn-danger {
   @apply bg-red-200 text-red-600 px-4 rounded-sm font-semibold shadow-sm;
@@ -38,21 +35,32 @@ table.basic a {
   @apply px-4 rounded-sm inline-flex mx-1 items-center gap-1 text-sm py-1;
 }
 .btn-outline-dark,
-.btn-red,.btn-dark,.btn-green,.btn-outline-green {
-  @apply px-4 py-1 rounded-md border-2;
+.btn-red,
+.btn-dark,
+.btn-green,
+.btn-outline-green,
+.btn-primary,
+.btn-outline-primary {
+  @apply px-4 py-1 rounded-md border-2 shadow-sm;
+}
+.btn-primary {
+  @apply bg-primary text-white;
+}
+.btn-outline-primary {
+  @apply bg-white text-primary border-primary;
 }
 .btn-red {
   @apply bg-red-600 text-white;
 }
 .btn-dark {
-  @apply bg-gray-800 text-white shadow-sm;
+  @apply bg-gray-800 text-white;
 }
 .btn-outline-dark {
-  @apply bg-white text-gray-800 border-gray-500 shadow-sm;
+  @apply bg-white text-gray-800 border-gray-500;
 }
 .btn-green {
-  @apply bg-teal-600 text-white shadow-sm;
+  @apply bg-teal-600 text-white;
 }
 .btn-outline-green {
-  @apply bg-white text-teal-600 border-teal-600 shadow-sm;
+  @apply bg-white text-teal-600 border-teal-600;
 }

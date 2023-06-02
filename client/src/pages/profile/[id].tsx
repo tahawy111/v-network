@@ -1,12 +1,13 @@
 import Layout from "@/components/Layout/Layout";
 import EditProfile from "@/components/Profile/EditProfile";
+import FollowBtn from "@/components/Profile/FollowBtn";
 import { startLoading, stopLoading } from "@/features/global/global";
-import { AppDispatch } from "@/features/store";
+import { AppDispatch, RootState } from "@/features/store";
 import { IUser } from "@/types/typescript";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 
 interface ProfileProps {
@@ -17,6 +18,7 @@ export default function Profile({ }: ProfileProps) {
     const { id } = useRouter().query;
     const [user, setUser] = useState<IUser>();
     const dispatch: AppDispatch = useDispatch();
+    const loggedUser = useSelector((state: RootState) => state.auth.user);
     const [onEdit, setOnEdit] = useState<boolean>(false);
     useEffect(() => {
         const fetchData = async () => {
@@ -51,10 +53,12 @@ export default function Profile({ }: ProfileProps) {
                     <a className="text-md">{ user?.story }</a>
                 </div>
 
-                <div className="">
-                    <button onClick={ () => setOnEdit(true) } className="btn-outline-green my-1">Edit Profile</button>
-                    { onEdit && <EditProfile user={ user! } setOnEdit={ setOnEdit } /> }
-                </div>
+                { id === loggedUser?._id ? (
+                    <div className="">
+                        <button onClick={ () => setOnEdit(true) } className="btn-outline-green my-1">Edit Profile</button>
+                        { onEdit && <EditProfile user={ user! } setOnEdit={ setOnEdit } /> }
+                    </div>
+                ) : (<FollowBtn />) }
             </div>
         </div>
     </Layout>;
