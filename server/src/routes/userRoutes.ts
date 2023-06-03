@@ -6,7 +6,7 @@ const router = Router();
 
 router.get('/search', userCtrl.searchUsers);
 router.get('/:id', userCtrl.getUser);
-router.put('/:id', auth, userCtrl.updateUser);
+router.put('/', auth, userCtrl.updateUser);
 
 
 export default router;
