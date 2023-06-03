@@ -10,7 +10,7 @@ export interface IUser {
     username: string;
     email: string;
     password: string;
-    avatar: string;
+    avatar: { public_id: string; url: string; };
     role: string;
     gender: string;
     mobile: string;

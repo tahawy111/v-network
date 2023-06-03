@@ -37,7 +37,7 @@ export default function Profile({ }: ProfileProps) {
 
     return <Layout>
         <div className="flex gap-12 items-center">
-            <img src={ user?.avatar } className="w-64" alt="" />
+            <img src={ user?.avatar.url } className="w-64" alt="" />
             <div className="flex justify-between w-full items-center">
                 <div className="w-1/2">
                     <div className="flex w-full justify-between items-center">
