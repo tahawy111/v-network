@@ -1,14 +1,14 @@
 import crypto from "crypto";
 
 export const checkImage = (file: File) => {
-  const types = ["image/png", "image/png", "image/jpeg", "image/svg+xml"];
-  let err = "";
-  if (!file) return (err = "File does not exist.");
-  if (file.size > 1024 * 1024) return (err = "The largest image size is 1mb");
+    const types = ["image/png", "image/png", "image/jpeg", "image/svg+xml"];
+    let err = "";
+    if (!file) return (err = "File does not exist.");
+    if (file.size > 1024 * 1024) return (err = "The largest image size is 1mb");
 
-  if (!types.includes(file.type))
-    err = "The file type must be png / jpg / jpeg / svg";
-  return err;
+    if (!types.includes(file.type))
+        err = "The file type must be png / jpg / jpeg / svg";
+    return err;
 };
 
 const generateSHA1 = (data: any) => {
@@ -18,18 +18,19 @@ const generateSHA1 = (data: any) => {
 };
 
 const generateSignature = (publicId: string, apiSecret: string) => {
-    const timestamp = Date.now()
+    const timestamp = Date.now();
     return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
 };
 
 export const imageUpload = async (file: File) => {
+    const cloudName = "dzdqy3wfg";
     const formData = new FormData();
 
     formData.append("file", file);
-    formData.append("upload_preset", "aob1eugs");
-    formData.append("cloud_name", "dzdqy3wfg");
+    formData.append("upload_preset", "t314ovux");
+    formData.append("cloud_name", cloudName);
 
-    const res = await fetch("https://api.cloudinary.com/v1_1/dzdqy3wfg/upload", {
+    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
         method: "POST",
         body: formData,
     });

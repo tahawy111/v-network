@@ -39,9 +39,15 @@ export default function Profile({ }: ProfileProps) {
         <div className="flex gap-12 items-center">
             <img src={ user?.avatar } className="w-64" alt="" />
             <div className="flex justify-between w-full items-center">
-                <div className="">
+                <div className="w-1/2">
                     <div className="flex w-full justify-between items-center">
                         <h1 className="text-4xl font-semibold">{ user?.username }</h1>
+                        { id === loggedUser?._id ? (
+                            <div className="">
+                                <button onClick={ () => setOnEdit(true) } className="btn-outline-green my-1">Edit Profile</button>
+                                { onEdit && <EditProfile user={ user! } setOnEdit={ setOnEdit } /> }
+                            </div>
+                        ) : (<FollowBtn />) }
                     </div>
                     <div className="flex gap-x-11">
                         <p className="text-md text-teal-600 cursor-pointer hover:underline">{ user?.followers.length } Followers</p>
@@ -50,15 +56,8 @@ export default function Profile({ }: ProfileProps) {
                     <p className="text-md">{ user?.fullname }</p>
                     <p className="text-md">{ user?.email }</p>
                     <a href={ user?.website } className="text-md text-teal-600 hover:underline">{ user?.website }</a>
-                    <p className="text-md max-w-full">{ user?.story }</p>
+                    <p className="text-md">{ user?.story }</p>
                 </div>
-
-                { id === loggedUser?._id ? (
-                    <div className="">
-                        <button onClick={ () => setOnEdit(true) } className="btn-outline-green my-1">Edit Profile</button>
-                        { onEdit && <EditProfile user={ user! } setOnEdit={ setOnEdit } /> }
-                    </div>
-                ) : (<FollowBtn />) }
             </div>
         </div>
     </Layout>;

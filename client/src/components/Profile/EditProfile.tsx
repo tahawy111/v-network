@@ -3,12 +3,13 @@ import { IFormProps, IUser, InputChange } from "../../types/typescript";
 import { SetStateAction, useId, useState } from "react";
 import Input from "../Custom-Ui/Input";
 import getThis from "@/lib/getThis";
-import { checkImage } from "@/lib/imageUpload";
+import { checkImage, imageUpload } from "@/lib/imageUpload";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { getError } from "@/lib/getError";
-import { useSelector } from "react-redux";
-import { RootState } from "@/features/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "@/features/store";
+import { startLoading, stopLoading } from "@/features/global/global";
 
 
 
@@ -23,6 +24,7 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
     const { access_token } = useSelector((state: RootState) => state.auth);
     const [userData, setUserData] = useState(user);
     const [avatar, setAvatar] = useState<any>();
+    const dispatch: AppDispatch = useDispatch();
 
     const handleInputChange = ({ target }: InputChange) => {
         setUserData((v: any) => ({ ...v, [target.name]: target.validity.valid ? target.value : v[target.name] }));
@@ -34,7 +36,7 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
         console.log(target.files);
         const err = target.files && checkImage(target.files[0]);
         if (err) return toast.error(err);
-        target.files && setAvatar({ preview: URL.createObjectURL(target.files[0]) });
+        target.files && setAvatar({ preview: URL.createObjectURL(target.files[0]), file: target.files[0] });
     };
 
     const submitHandler = async (e: IFormProps) => {
@@ -45,7 +47,10 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
         if (userData.story.length > 200) return toast.error("The maximum length of story is 200 chars");
 
         try {
+            dispatch(startLoading());
+            if (avatar) imageUpload(avatar.file);
             await axios.put(`${process.env.API}/api/user`, userData, { headers: { Authorization: access_token } });
+            dispatch(stopLoading());
             setOnEdit(false);
         } catch (error) {
             toast.error(getError(error));
