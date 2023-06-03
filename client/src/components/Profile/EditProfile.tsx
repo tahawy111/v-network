@@ -5,6 +5,8 @@ import Input from "../Custom-Ui/Input";
 import getThis from "@/lib/getThis";
 import { checkImage } from "@/lib/imageUpload";
 import { toast } from "react-hot-toast";
+import axios from "axios";
+import { getError } from "@/lib/getError";
 
 
 
@@ -17,7 +19,7 @@ interface EditProfileProps {
 export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
     const initState = { fullname: "", username: "", email: "", password: "", role: "", gender: "", mobile: "", address: "", story: "", website: "", followers: "", following: "", saved: "", };
 
-    const [userData, setUserData] = useState(initState);
+    const [userData, setUserData] = useState(user);
     const [avatar, setAvatar] = useState<any>();
 
     const handleInputChange = ({ target }: InputChange) => {
@@ -33,9 +35,20 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
         target.files && setAvatar({ preview: URL.createObjectURL(target.files[0]) });
     };
 
-    const submitHandler = (e: IFormProps) => {
+    const submitHandler = async (e: IFormProps) => {
         e.preventDefault();
+
+        if (!userData.fullname) return toast.error("Please add your full name.");
+        if (userData.fullname.length > 25) return toast.error("The maximum length of full name is 25");
         
+
+        try {
+            await axios.put(`${process.env.API}/api/user`, userData);
+            setOnEdit(false);
+        } catch (error) {
+            toast.error(getError(error));
+        }
+
     };
 
 
@@ -64,12 +77,11 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
                     <Input name="mobile" placeholder="Mobile" value={ userData.mobile } onChange={ handleInputChange } />
                     <Input name="address" placeholder="Address" value={ userData.address } onChange={ handleInputChange } />
                     <Input name="website" placeholder="Website" value={ userData.website } onChange={ handleInputChange } />
-                    <Input name="story" placeholder="Story" value={ userData.story } onChange={ handleInputChange } />
 
                     <div className="">
                         <label htmlFor={ "storyId" }>Story</label>
                         <textarea cols={ 30 } rows={ 4 } className="" name="story" id="storyId" value={ userData.story } onChange={ handleInputChange }></textarea>
-                        <small className="text-red-500">{ userData.story.length }/25</small>
+                        <small className="text-red-500">{ userData.story.length }/200</small>
                     </div>
 
                     <div className='flex justify-between my-1'>
