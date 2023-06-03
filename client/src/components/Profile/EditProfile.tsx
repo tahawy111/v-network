@@ -48,7 +48,7 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
 
         try {
             dispatch(startLoading());
-            if (avatar) imageUpload(avatar.file);
+            if (avatar) setUserData({ ...userData, avatar: (await imageUpload(avatar.file)) });
             await axios.put(`${process.env.API}/api/user`, userData, { headers: { Authorization: access_token } });
             dispatch(stopLoading());
             setOnEdit(false);
