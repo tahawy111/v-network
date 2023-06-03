@@ -1,5 +1,5 @@
 import { Dispatch } from "@reduxjs/toolkit";
-import { IUser, InputChange } from "../../types/typescript";
+import { IFormProps, IUser, InputChange } from "../../types/typescript";
 import { SetStateAction, useId, useState } from "react";
 import Input from "../Custom-Ui/Input";
 import getThis from "@/lib/getThis";
@@ -25,12 +25,17 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
     };
     const avatarId = useId();
     const imgChange = (e: InputChange) => {
-        
+
         const target = e.target as HTMLInputElement;
         console.log(target.files);
-        const err = target.files && checkImage(target.files[0])
-        if(err) return toast.error(err)
+        const err = target.files && checkImage(target.files[0]);
+        if (err) return toast.error(err);
         target.files && setAvatar({ preview: URL.createObjectURL(target.files[0]) });
+    };
+
+    const submitHandler = (e: IFormProps) => {
+        e.preventDefault();
+        
     };
 
 
@@ -40,7 +45,7 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
         <button className="btn-red absolute top-5 right-5" onClick={ () => setOnEdit(false) }>Close</button>
 
         <div className="max-w-md w-full bg-white p-5 rounded-md mx-auto my-5">
-            <form>
+            <form onSubmit={ submitHandler }>
                 <div className="w-36 h-36 overflow-hidden rounded-full relative mx-auto my-4 border border-gray-100 cursor-pointer group">
                     <img className="w-full h-full block object-cover" src={ avatar ? avatar.preview : user.avatar } alt="" />
                     <label htmlFor={ avatarId } className="absolute -bottom-full left-0 w-full h-1/2 text-center text-orange-400 transition-all duration-300 ease-in-out group group-hover:-bottom-[15%] bg-[#fff5]">

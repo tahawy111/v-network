@@ -1,11 +1,6 @@
 import { Request, Response } from "express";
-import User, { IUser } from "../models/User";
-import bcrypt from 'bcrypt';
-import { generateAccessToken, generateActiveToken, generateRefreshToken } from "../utils/generateToken";
-import sendMail from "../utils/sendMail";
-import { validEmail } from "../utils/valid";
-import { verify } from "jsonwebtoken";
-import { IToken } from "../utils/interface";
+import User from "../models/User";
+import { IReqAuth } from "../types/typescript";
 
 const userCtrl = {
     searchUsers: async (req: Request, res: Response) => {
@@ -21,8 +16,21 @@ const userCtrl = {
         try {
 
             const user = await User.findById(req.params.id).select(`-password`);
-            if(!user) return res.status(400).json({msg:"User does not exist."})
+            if (!user) return res.status(400).json({ msg: "User does not exist." });
             res.json({ user });
+        } catch (error: any) {
+            return res.status(400).json({ msg: error.message });
+        }
+    },
+    updateUser: async (req: IReqAuth, res: Response) => {
+        try {
+            const { fullname, avatar, mobile, address, story, website, gender } = req.body;
+            if (!fullname) return res.status(404).json({ msg: 'Please add your full name.' });
+
+            const updatedUser = await User.findByIdAndUpdate(req.user?._id, { fullname, avatar, mobile, address, story, website, gender });
+
+            res.json({ msg: "Update Success!", updatedUser });
+
         } catch (error: any) {
             return res.status(400).json({ msg: error.message });
         }
