@@ -7,6 +7,8 @@ import { checkImage } from "@/lib/imageUpload";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { getError } from "@/lib/getError";
+import { useSelector } from "react-redux";
+import { RootState } from "@/features/store";
 
 
 
@@ -18,7 +20,7 @@ interface EditProfileProps {
 
 export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
     const initState = { fullname: "", username: "", email: "", password: "", role: "", gender: "", mobile: "", address: "", story: "", website: "", followers: "", following: "", saved: "", };
-
+    const { access_token } = useSelector((state: RootState) => state.auth);
     const [userData, setUserData] = useState(user);
     const [avatar, setAvatar] = useState<any>();
 
@@ -39,11 +41,11 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
         e.preventDefault();
 
         if (!userData.fullname) return toast.error("Please add your full name.");
-        if (userData.fullname.length > 25) return toast.error("The maximum length of full name is 25");
-        
+
+        if (userData.story.length > 200) return toast.error("The maximum length of story is 200 chars");
 
         try {
-            await axios.put(`${process.env.API}/api/user`, userData);
+            await axios.put(`${process.env.API}/api/user`, userData, { headers: { Authorization: access_token } });
             setOnEdit(false);
         } catch (error) {
             toast.error(getError(error));

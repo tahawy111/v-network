@@ -50,7 +50,7 @@ export default function Profile({ }: ProfileProps) {
                     <p className="text-md">{ user?.fullname }</p>
                     <p className="text-md">{ user?.email }</p>
                     <a href={ user?.website } className="text-md text-teal-600 hover:underline">{ user?.website }</a>
-                    <a className="text-md">{ user?.story }</a>
+                    <p className="text-md max-w-full">{ user?.story }</p>
                 </div>
 
                 { id === loggedUser?._id ? (
