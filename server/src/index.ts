@@ -10,7 +10,7 @@ dotenv.config();
 
 
 // Mongodb Connecting
-mongoose.connect(`${process.env.DATABASE_URL}`).then(() => console.log("DB Connected"));
+mongoose.connect(`${process.env.DATABASE_URL}`).then(() => console.log("DB Connected"))
 
 
 // App Configuration
