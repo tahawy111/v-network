@@ -36,6 +36,7 @@ table.basic a {
 }
 .btn-outline-dark,
 .btn-red,
+.btn-outline-red,
 .btn-dark,
 .btn-green,
 .btn-outline-green,
@@ -52,11 +53,14 @@ table.basic a {
 .btn-red {
   @apply bg-red-600 text-white;
 }
+.btn-outline-red {
+  @apply bg-transparent text-red-600 border-red-600;
+}
 .btn-dark {
   @apply bg-gray-800 text-white;
 }
 .btn-outline-dark {
-  @apply bg-white text-gray-800 border-gray-500;
+  @apply bg-transparent text-gray-800 border-gray-500;
 }
 .btn-green {
   @apply bg-teal-600 text-white;
