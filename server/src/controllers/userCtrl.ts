@@ -45,6 +45,7 @@ const userCtrl = {
             if (userFollowed.followers.includes(followerId)) return res.status(403).json({ msg: 'This user is already in the followers list.' });
             userFollowed.followers.push(followerId);
             await userFollowed.save();
+           
             const follower = await User.findById(followerId);
             if (!follower) return res.status(404).json({ msg: 'This user is not exist.' });
             follower.following.push(followedId);
@@ -66,6 +67,11 @@ const userCtrl = {
             // removing user id from followers array
             userFollowed.followers = userFollowed.followers.filter((id) => id.toString() !== followerId.toString());
             await userFollowed.save();
+
+            const follower = await User.findById(followerId);
+            if (!follower) return res.status(404).json({ msg: 'This user is not exist.' });
+            follower.following = follower.following.filter((id) => id !== followedId.toString() );
+            await follower.save()
 
             res.json({ msg: "Removed 1 follower", user: userFollowed });
 
