@@ -45,9 +45,9 @@ export default function Profile({ }: ProfileProps) {
                         { id === loggedUser?._id ? (
                             <div className="">
                                 <button onClick={ () => setOnEdit(true) } className="btn-outline-green my-1">Edit Profile</button>
-                                { onEdit && <EditProfile setUser={setUser} user={ user! } setOnEdit={ setOnEdit } /> }
+                                { onEdit && <EditProfile setUser={ setUser } user={ user! } setOnEdit={ setOnEdit } /> }
                             </div>
-                        ) : (<FollowBtn />) }
+                        ) : (<FollowBtn setUser={ setUser } user={ user! } />) }
                     </div>
                     <div className="flex gap-x-11">
                         <p className="text-md text-teal-600 cursor-pointer hover:underline">{ user?.followers.length } Followers</p>
