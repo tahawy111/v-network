@@ -10,6 +10,7 @@ import { getError } from "@/lib/getError";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "@/features/store";
 import { startLoading, stopLoading } from "@/features/global/global";
+import { setUser as setGlobalUser } from "@/features/auth/authSlice";
 
 
 
@@ -17,10 +18,10 @@ import { startLoading, stopLoading } from "@/features/global/global";
 interface EditProfileProps {
     user: IUser;
     setOnEdit: (param: boolean) => void;
+    setUser: (param: IUser) => void;
 }
 
-export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
-    const initState = { fullname: "", username: "", email: "", password: "", role: "", gender: "", mobile: "", address: "", story: "", website: "", followers: "", following: "", saved: "", };
+export default function EditProfile({ user, setOnEdit, setUser }: EditProfileProps) {
     const { access_token } = useSelector((state: RootState) => state.auth);
     const [userData, setUserData] = useState(user);
     const [avatar, setAvatar] = useState<any>();
@@ -48,10 +49,15 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
 
         try {
             dispatch(startLoading());
-            if (avatar) setUserData({ ...userData, avatar: (await imageUpload(avatar.file)) });
-            await axios.put(`${process.env.API}/api/user`, userData, { headers: { Authorization: access_token } });
-            dispatch(stopLoading());
+            let newAvatar = avatar;
+            if (avatar) newAvatar = await imageUpload(avatar.file);
+            const { data } = await axios.put(`${process.env.API}/api/user`, { ...userData, avatar: newAvatar }, { headers: { Authorization: access_token } });
+            console.log(data);
+            
             setOnEdit(false);
+            setUser(data.updatedUser);
+            dispatch(setGlobalUser({ user: data.updatedUser, access_token } as any));
+            dispatch(stopLoading());
         } catch (error) {
             toast.error(getError(error));
         }
@@ -67,7 +73,7 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
         <div className="max-w-md w-full bg-white p-5 rounded-md mx-auto my-5">
             <form onSubmit={ submitHandler }>
                 <div className="w-36 h-36 overflow-hidden rounded-full relative mx-auto my-4 border border-gray-100 cursor-pointer group">
-                    <img className="w-full h-full block object-cover" src={ avatar ? avatar.preview : user.avatar } alt="" />
+                    <img className="w-full h-full block object-cover" src={ avatar ? avatar.preview : user.avatar.url } alt="" />
                     <label htmlFor={ avatarId } className="absolute -bottom-full left-0 w-full h-1/2 text-center text-orange-400 transition-all duration-300 ease-in-out group group-hover:-bottom-[15%] bg-[#fff5]">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="inline w-6 h-6">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" />
@@ -94,8 +100,8 @@ export default function EditProfile({ user, setOnEdit }: EditProfileProps) {
                     <div className='flex justify-between my-1'>
 
 
-                        <Input value={ "male" } onChange={ handleInputChange } name='gender' placeholder='Male' type='radio' />
-                        <Input value={ "female" } onChange={ handleInputChange } name='gender' placeholder='Female' type='radio' />
+                        <Input checked={ userData.gender === "male" } value={ "male" } onChange={ handleInputChange } name='gender' placeholder='Male' type='radio' />
+                        <Input checked={ userData.gender === "female" } value={ "female" } onChange={ handleInputChange } name='gender' placeholder='Female' type='radio' />
 
                     </div>
 

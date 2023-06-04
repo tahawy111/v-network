@@ -7,7 +7,7 @@ export interface IUser {
     username: string;
     email: string;
     password: string;
-    avatar: string;
+    avatar: { url: string; public_id: string; };
     role: string;
     gender: string;
     mobile: string;
@@ -25,7 +25,7 @@ const userSchema = new Schema<IUser>({
     username: { type: String, required: true, trim: true, maxlength: 25, unique: true },
     email: { type: String, required: true, trim: true, unique: true },
     password: { type: String, required: true },
-    avatar: { type: String, default: "https://i.imgur.com/YY4LxJt.png" },
+    avatar: { type: Object, default: { url: "https://i.imgur.com/YY4LxJt.png", public_id: "" } },
     role: { type: String, default: 'user' },
     gender: { type: String, default: 'male' },
     mobile: { type: String, default: '' },

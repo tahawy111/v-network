@@ -68,7 +68,7 @@ export default function Header({ }: HeaderProps) {
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="group" asChild>
               <span className="flex items-center w-12 md:ml-0">
-                <div><img className="select-none w-10 md:w-20" src={ user?.avatar } /></div>
+                <div><img className="select-none w-10 md:w-20" src={ user?.avatar.url } /></div>
 
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-black dark:text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />

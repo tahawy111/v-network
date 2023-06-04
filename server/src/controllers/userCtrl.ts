@@ -27,7 +27,7 @@ const userCtrl = {
             const { fullname, avatar, mobile, address, story, website, gender } = req.body;
             if (!fullname) return res.status(404).json({ msg: 'Please add your full name.' });
 
-            const updatedUser = await User.findByIdAndUpdate(req.user?._id, { fullname, avatar, mobile, address, story, website, gender });
+            const updatedUser = await User.findByIdAndUpdate(req.user?._id, { fullname, avatar, mobile, address, story, website, gender }, { new: true });
 
             res.json({ msg: "Update Success!", updatedUser });
 

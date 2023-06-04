@@ -36,16 +36,16 @@ export default function Profile({ }: ProfileProps) {
 
 
     return <Layout>
-        <div className="flex gap-12 items-center">
+        <div className="flex gap-12 items-center md:flex-nowrap flex-wrap justify-center p-2">
             <img src={ user?.avatar.url } className="w-64" alt="" />
             <div className="flex justify-between w-full items-center">
-                <div className="w-1/2">
+                <div className="w-full">
                     <div className="flex w-full justify-between items-center">
                         <h1 className="text-4xl font-semibold">{ user?.username }</h1>
                         { id === loggedUser?._id ? (
                             <div className="">
                                 <button onClick={ () => setOnEdit(true) } className="btn-outline-green my-1">Edit Profile</button>
-                                { onEdit && <EditProfile user={ user! } setOnEdit={ setOnEdit } /> }
+                                { onEdit && <EditProfile setUser={setUser} user={ user! } setOnEdit={ setOnEdit } /> }
                             </div>
                         ) : (<FollowBtn />) }
                     </div>
