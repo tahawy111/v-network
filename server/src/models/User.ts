@@ -14,8 +14,8 @@ export interface IUser {
     address: string;
     story: string;
     website: string;
-    followers: string;
-    following: string;
+    followers: string[];
+    following: string[];
     saved: string;
 }
 

@@ -35,6 +35,22 @@ const userCtrl = {
             return res.status(400).json({ msg: error.message });
         }
     },
+    follow: async (req: IReqAuth, res: Response) => {
+        try {
+            const { followedId, followerId } = req.body;
+
+            const userFollowed = await User.findById(followedId);
+            if (!userFollowed) return res.status(404).json({ msg: 'This user is not exist.' });
+            if (userFollowed.followers.includes(followerId)) return res.status(403).json({ msg: 'This user is already in the followers list.' });
+            userFollowed.followers.push(followerId);
+            await userFollowed.save();
+
+            res.json({ msg: "Added 1 follower", user: userFollowed });
+
+        } catch (error: any) {
+            return res.status(400).json({ msg: error.message });
+        }
+    },
 
 };
 
