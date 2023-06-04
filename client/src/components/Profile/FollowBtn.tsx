@@ -13,27 +13,42 @@ interface FollowBtnProps {
 }
 
 export default function FollowBtn({ user, setUser }: FollowBtnProps) {
+  if(!user) return <></>
   const { user: signedUser, access_token } = useSelector((state: RootState) => state.auth);
-  const [followed, setFollowed] = useState<boolean>(user && user.followers.includes(signedUser?._id.toString()!));
+  if(!signedUser) return <></>
+  const [followed, setFollowed] = useState<boolean>(user.followers.includes(signedUser._id.toString()));
+  const [loading, setLoading] = useState<boolean>(false)
   
 
-  const handleUnFollow = () => {
-    setFollowed(false);
-  };
   const handleFollow = async () => {
     try {
-      const { data } = await axios.put(`${process.env.API}/api/user/follow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
+      setLoading(true)
       setFollowed(true);
+      const { data } = await axios.put(`${process.env.API}/api/user/follow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
       setUser(data.user);
+      setLoading(false)
     } catch (error) {
       toast.error(getError(error));
     }
   };
+
+  const handleUnFollow = async () => {
+    try {
+      setLoading(true)
+      setFollowed(false);
+      const { data } = await axios.put(`${process.env.API}/api/user/unfollow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
+      setUser(data.user);
+      setLoading(false)
+    } catch (error) {
+      toast.error(getError(error));
+    }
+  };
+
   return (<>
-    { followed && signedUser && user ? (<>
-      <button onClick={ handleUnFollow } className="btn-outline-red">UnFollow</button>
+    { followed ? (<>
+      <button disabled={loading} onClick={ handleUnFollow } className="btn-outline-red">UnFollow</button>
     </>) : (<>
-      <button onClick={ handleFollow } className="btn-outline-green">Follow</button>
+      <button disabled={loading} onClick={ handleFollow } className="btn-outline-green">Follow</button>
     </>) }
   </>);
 }
