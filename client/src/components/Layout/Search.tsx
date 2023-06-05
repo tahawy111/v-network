@@ -4,7 +4,8 @@ import axios from "axios";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
 import { useSelector } from "react-redux";
-import UserCard from "./UserCard";
+import UserCard from "./SearchUserCard";
+import { useRouter } from "next/router";
 interface SearchProps {
 }
 
@@ -39,6 +40,15 @@ export default function Search({ }: SearchProps) {
             setUsers([])
         }
     }, [search]);
+
+    const router = useRouter();
+
+    router.events?.on("routeChangeComplete", () => {
+        setUsers([]);
+        setSearch("")
+    });
+
+
     return <form onSubmit={(e) => e.preventDefault()} className={ `relative w-full mx-1 md:w-1/3 text-black dark:text-white` }>
         <input ref={ searchRef } className="basic py-1" type="text" name="search" value={ search } onChange={ (e) => setSearch(e.target.value.toLowerCase().replace(/ /g, "")) } />
         <div onClick={ () => searchRef.current?.focus() } className={ `absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-black select-none items-center inline-flex cursor-pointer ${search ? "opacity-0" : "opacity-30"}` }>

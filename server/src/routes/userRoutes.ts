@@ -9,6 +9,7 @@ router.get('/:id', userCtrl.getUser);
 router.put('/', auth, userCtrl.updateUser);
 router.put('/follow', auth, userCtrl.follow);
 router.put('/unfollow', auth, userCtrl.unfollow);
+router.post('/getUsers', auth, userCtrl.getUsers);
 
 
 export default router;

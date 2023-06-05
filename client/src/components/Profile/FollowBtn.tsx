@@ -21,7 +21,7 @@ export default function FollowBtn({ user, setUser }: FollowBtnProps): any {
     try {
       setLoading(true);
       const { data } = await axios.put(`${process.env.API}/api/user/follow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
-      setUser(data.user);
+      setUser({ ...user, followers: data.user.followers, following: data.user.following });
       setLoading(false);
     } catch (error) {
       toast.error(getError(error));
@@ -32,17 +32,20 @@ export default function FollowBtn({ user, setUser }: FollowBtnProps): any {
     try {
       setLoading(true);
       const { data } = await axios.put(`${process.env.API}/api/user/unfollow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
-      setUser(data.user);
+      setUser({ ...user, followers: data.user.followers, following: data.user.following });
       setLoading(false);
     } catch (error) {
       toast.error(getError(error));
     }
   };
 
+
+
+
   return (<>
 
     { user && signedUser && (<>
-      { user.followers.includes(signedUser._id) ? (<>
+      { user.followers.map((user) => user._id === signedUser._id).length > 0 ? (<>
         <button disabled={ loading } onClick={ handleUnFollow } className="btn-outline-red">UnFollow { loading && <ClipLoader color="#dc2626" size={ 10 } /> }</button>
       </>) : (<>
         <button disabled={ loading } onClick={ handleFollow } className="btn-outline-green">Follow { loading && <ClipLoader color="#0d9488" size={ 10 } /> }</button>

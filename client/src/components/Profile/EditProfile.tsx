@@ -89,6 +89,7 @@ export default function EditProfile({ user, setOnEdit, setUser }: EditProfilePro
                     <Input name="fullname" placeholder="Full Name" pattern="^.{0,25}$" /* matches 25 chars only */ value={ userData.fullname } onChange={ handleInputChange } footer={ `${userData.fullname.length}/25` } />
                     <Input name="mobile" placeholder="Mobile" value={ userData.mobile } onChange={ handleInputChange } />
                     <Input name="address" placeholder="Address" value={ userData.address } onChange={ handleInputChange } />
+                    <Input name="email" placeholder="Email" value={ userData.email } onChange={ handleInputChange } />
                     <Input name="website" placeholder="Website" value={ userData.website } onChange={ handleInputChange } />
 
                     <div className="">

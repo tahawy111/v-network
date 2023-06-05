@@ -14,22 +14,21 @@ import { setUser as setGlobalUser } from "@/features/auth/authSlice";
 import FollowBtn from "./FollowBtn";
 import UserCard from "../Layout/UserCard";
 import Link from "next/link";
-import { useRouter } from "next/router";
 
 
 
 
 interface EditProfileProps {
-    followersIds: string[];
+    followingIds: string[];
     onShow: (param: boolean) => void;
     setUser: (param: IUser) => void;
 }
 
-export default function ShowFollowers({ followersIds, onShow, setUser }: EditProfileProps) {
+export default function ShowFollowing({ followingIds, onShow, setUser }: EditProfileProps) {
     const { auth } = useSelector((state: RootState) => state);
-    const [followers, setFollowers] = useState<IUser[]>();
+    const [Following, setFollowing] = useState<IUser[]>();
     useEffect(() => {
-        axios.post(`${process.env.API}/api/user/getUsers`, { ids: followersIds }, { headers: { Authorization: auth.access_token } }).then(({ data }) => setFollowers(data.users));
+        axios.post(`${process.env.API}/api/user/getUsers`, { ids: followingIds }, { headers: { Authorization: auth.access_token } }).then(({ data }) => setFollowing(data.users));
     }, []);
 
     return <div className="w-full fixed top-0 left-0 h-screen bg-[#0008] overflow-auto flex items-center">
@@ -41,9 +40,9 @@ export default function ShowFollowers({ followersIds, onShow, setUser }: EditPro
 
             <div className="mt-12">
                 {
-                    followers && followers.length > 0 && followers.map((user: IUser) => (
+                    Following && Following.length > 0 && Following.map((user: IUser) => (
                         <Link key={ user._id } href={ `/profile/${user._id}` }>
-                            <UserCard  user={ user } >
+                            <UserCard user={ user } >
                             </UserCard>
                         </Link>
                     ))
