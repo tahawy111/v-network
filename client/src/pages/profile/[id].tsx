@@ -1,6 +1,7 @@
 import Layout from "@/components/Layout/Layout";
 import EditProfile from "@/components/Profile/EditProfile";
 import FollowBtn from "@/components/Profile/FollowBtn";
+import ShowFollowers from "@/components/Profile/showFollowers";
 import { startLoading, stopLoading } from "@/features/global/global";
 import { AppDispatch, RootState } from "@/features/store";
 import { IUser } from "@/types/typescript";
@@ -20,6 +21,7 @@ export default function Profile({ }: ProfileProps) {
     const dispatch: AppDispatch = useDispatch();
     const loggedUser = useSelector((state: RootState) => state.auth.user);
     const [onEdit, setOnEdit] = useState<boolean>(false);
+    const [isFollowersOpen, setIsFollowersOpen] = useState<boolean>(false);
     useEffect(() => {
         const fetchData = async () => {
             dispatch(startLoading());
@@ -50,7 +52,8 @@ export default function Profile({ }: ProfileProps) {
                         ) : (<FollowBtn setUser={ setUser } user={ user! } />) }
                     </div>
                     <div className="flex gap-x-11">
-                        <p className="text-md text-teal-600 cursor-pointer hover:underline">{ user?.followers.length } Followers</p>
+                        <p onClick={ () => setIsFollowersOpen(true) } className="text-md text-teal-600 cursor-pointer hover:underline">{ user?.followers.length } Followers</p>
+                        { isFollowersOpen && <ShowFollowers user={user!} onShow={setIsFollowersOpen}   /> }
                         <p className="text-md text-teal-600 cursor-pointer hover:underline">{ user?.following.length } Following</p>
                     </div>
                     <p className="text-md">{ user?.fullname }</p>
