@@ -13,9 +13,11 @@ interface FollowBtnProps {
 }
 
 export default function FollowBtn({ user, setUser }: FollowBtnProps): any {
-  const { user: signedUser, access_token } = useSelector((state: RootState) => state.auth);
-  const [followed, setFollowed] = useState<boolean>(user && user.followers.includes(signedUser && typeof signedUser === "string" && (signedUser as any)._id.toString()));
   const [loading, setLoading] = useState<boolean>(false);
+  const { user: signedUser, access_token } = useSelector((state: RootState) => state.auth);
+  const [followed, setFollowed] = useState<boolean>(user && user.followers.includes(signedUser?._id!));
+  console.log({ user, signedUser });
+
 
   const handleFollow = async () => {
     try {
@@ -42,12 +44,17 @@ export default function FollowBtn({ user, setUser }: FollowBtnProps): any {
   };
 
   return (<>
-    { user && (<>
-      { followed ? (<>
-        <button disabled={ loading } onClick={ handleUnFollow } className="btn-outline-red">UnFollow</button>
+
+    { user && signedUser && (<>
+      { user.followers.includes(signedUser._id) ? (<>
+        <button disabled={ loading } onClick={ handleUnFollow } className="btn-outline-red">UnFollow { loading && <ClipLoader color="#dc2626" size={ 10 } /> }</button>
       </>) : (<>
-        <button disabled={ loading } onClick={ handleFollow } className="btn-outline-green">Follow</button>
+        <button disabled={ loading } onClick={ handleFollow } className="btn-outline-green">Follow { loading && <ClipLoader color="#0d9488" size={ 10 } /> }</button>
       </>) }
     </>) }
+
   </>);
 }
+
+
+
