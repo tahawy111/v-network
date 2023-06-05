@@ -15,14 +15,11 @@ interface FollowBtnProps {
 export default function FollowBtn({ user, setUser }: FollowBtnProps): any {
   const [loading, setLoading] = useState<boolean>(false);
   const { user: signedUser, access_token } = useSelector((state: RootState) => state.auth);
-  const [followed, setFollowed] = useState<boolean>(user && user.followers.includes(signedUser?._id!));
-  console.log({ user, signedUser });
 
 
   const handleFollow = async () => {
     try {
       setLoading(true);
-      setFollowed(true);
       const { data } = await axios.put(`${process.env.API}/api/user/follow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
       setUser(data.user);
       setLoading(false);
@@ -34,7 +31,6 @@ export default function FollowBtn({ user, setUser }: FollowBtnProps): any {
   const handleUnFollow = async () => {
     try {
       setLoading(true);
-      setFollowed(false);
       const { data } = await axios.put(`${process.env.API}/api/user/unfollow`, { followedId: user._id, followerId: signedUser?._id }, { headers: { Authorization: access_token } });
       setUser(data.user);
       setLoading(false);
