@@ -4,10 +4,16 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 
 export interface GlobalState {
   isLoading: boolean;
+  status: {
+    statusModalShow: boolean;
+  };
 }
 
 const initialState: GlobalState = {
   isLoading: false,
+  status: {
+    statusModalShow: false
+  }
 };
 
 export const globalSlice = createSlice({
@@ -20,10 +26,13 @@ export const globalSlice = createSlice({
     stopLoading: (state) => {
       return { ...state, isLoading: false };
     },
+    setStatusModalShow: (state, action) => {
+      return { ...state, status: { statusModalShow: action.payload } };
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { startLoading,stopLoading } = globalSlice.actions;
+export const { startLoading, stopLoading, setStatusModalShow } = globalSlice.actions;
 
 export default globalSlice.reducer;
