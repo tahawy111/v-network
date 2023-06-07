@@ -19,7 +19,7 @@ label {
   @apply text-sm text-gray-600 font-medium;
 }
 .btn-danger {
-  @apply bg-red-200 text-red-600 px-4 rounded-sm font-semibold shadow-sm;
+  @apply cursor-pointer bg-red-200 text-red-600 px-4 rounded-sm font-semibold shadow-sm;
 }
 table.basic {
   @apply w-full text-left bg-white shadow-md rounded-sm;
@@ -42,7 +42,7 @@ table.basic a {
 .btn-outline-green,
 .btn-primary,
 .btn-outline-primary {
-  @apply px-4 py-1 rounded-md border-2 shadow-sm;
+  @apply px-4 py-1 rounded-md border-2 shadow-sm cursor-pointer;
 }
 .btn-primary {
   @apply bg-primary text-white;
