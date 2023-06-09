@@ -1,6 +1,7 @@
 import { setStatusModalShow } from '@/features/global/global';
 import { AppDispatch, RootState } from '@/features/store';
-import { useId, useState } from 'react';
+import { ChangeEvent, useId, useState } from 'react';
+import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 
 interface StatusModalProps {
@@ -11,10 +12,29 @@ export default function StatusModal({ }: StatusModalProps) {
     const dispatch: AppDispatch = useDispatch();
     const { auth } = useSelector((state: RootState) => state);
     const [content, setContent] = useState<string>("");
-    const fileId = useId()
+    const [images, setImages] = useState<File[]>([]);
+    const fileId = useId();
+    const handleChangeImages = (e: ChangeEvent<HTMLInputElement>) => {
+        const files = Array.from(e.target.files!);
+        let err = "";
+        let newImages: File[] = [];
+
+        files.forEach(file => {
+            if (!file) return err = "File does not exist.";
+
+            if (file.size > 1024 * 1024 * 5) {
+                return err = "The image/video largest is 5mb.";
+            }
+
+            return newImages.push(file);
+        });
+
+        if (err) toast.error(err);
+        setImages(prev => [...prev, ...newImages]);
+    };
 
     return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto'>
-        <form className="max-w-md w-full bg-white flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
+        <form className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
             <div className="flex justify-between items-center border-b border-gray-200 mb-2 py-3">
                 <h5 className='m-0'>Create Post</h5>
                 <span className="cursor-pointer text-3xl font-black -translate-y-1" onClick={ () => dispatch(setStatusModalShow(false)) }>&times;</span>
@@ -23,6 +43,18 @@ export default function StatusModal({ }: StatusModalProps) {
 
             <div className="">
                 <textarea rows={ 5 } className='outline-none border-none resize-none' name="content" value={ content } onChange={ (e) => setContent(e.target.value) } placeholder={ `${auth.user?.username}, What are you thinking?` } />
+
+                <div className="max-h-64 w-full overflow-y-auto grid grid-cols-3 gap-3 place-items-center">
+                {
+                    images.map((img, index) => (
+                        <div className='w-full h-full relative' key={ index }>
+                            <img src={ URL.createObjectURL(img) } alt="images" className='w-full h-full block object-contain border-gray-200 border p-1 rounded-md' />
+                            <span className='cursor-pointer text-xl font-bold absolute top-1 right-1 bg-white border border-red-500 text-red-500 rounded-full px-2 py-0.5 transition-colors duration-150 hover:bg-red-500 hover:text-white hover:border-white pt-0 ease-out'>&times;</span>
+                        </div>
+                    ))
+                }
+                </div>
+
                 <div className="flex relative justify-center items-center">
 
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-8 h-8 cursor-pointer">
@@ -31,14 +63,14 @@ export default function StatusModal({ }: StatusModalProps) {
                     </svg>
 
                     <div className="flex items-center overflow-hidden mx-2 relative">
-                        <label htmlFor={fileId}>
+                        <label htmlFor={ fileId }>
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-8 h-8 cursor-pointer">
                                 <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
                             </svg>
                         </label>
 
 
-                        <input className='hidden' type="file" name='file' id={fileId} multiple accept='image/*' />
+                        <input className='hidden' type="file" name='file' id={ fileId } multiple accept='image/*' onChange={ handleChangeImages } />
 
 
                     </div>
