@@ -82,7 +82,7 @@ export default function StatusModal({ }: StatusModalProps) {
                     stream && (
                         <div className='relative'>
                             <video src="" autoPlay muted ref={ videoRef } className='w-full h-full' />
-                            <span onClick={() => setStream(false)} className='cursor-pointer text-red-500 absolute bg-white top-1 right-1 text-xl font-bold rounded-full px-2 border border-red-500 pt-0 pb-0.5'>&times;</span>
+                            <span onClick={() => setStream(false)} className='cursor-pointer text-red-500 absolute top-1 right-1 text-4xl font-bold rounded-full px-2 pb-1.5 leading-none bg-main/30'>&times;</span>
                             <canvas className={`hidden`} ref={ canvasRef } />
                         </div>
                     )
