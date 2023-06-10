@@ -82,8 +82,14 @@ export default function StatusModal({ }: StatusModalProps) {
                     stream && (
                         <div className='relative'>
                             <video src="" autoPlay muted ref={ videoRef } className='w-full h-full' />
-                            <span onClick={() => setStream(false)} className='cursor-pointer text-red-500 absolute top-1 right-1 text-4xl font-bold rounded-full px-2 pb-1.5 leading-none bg-main/30'>&times;</span>
-                            <canvas className={`hidden`} ref={ canvasRef } />
+
+                            {/* ------ Start Close Btn -------- */ }
+                            <div onClick={ () => setStream(false) } className="cursor-pointer absolute top-1 right-1 bg-main/30 rounded-full p-2 text-4xl w-10 h-10 font-bold flex justify-center items-center">
+                                <i className='absolute -translate-y-[3.5px]'>&times;</i>
+                            </div>
+                            {/* ------ End Close Btn -------- */ }
+
+                            <canvas className={ `hidden` } ref={ canvasRef } />
                         </div>
                     )
                 }
@@ -114,16 +120,16 @@ export default function StatusModal({ }: StatusModalProps) {
                             </>
                     }
 
-                                <div className="flex items-center overflow-hidden mx-2 relative">
-                                    <label htmlFor={ fileId }>
-                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-8 h-8 cursor-pointer dark:text-white">
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
-                                        </svg>
-                                    </label>
+                    <div className="flex items-center overflow-hidden mx-2 relative">
+                        <label htmlFor={ fileId }>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-8 h-8 cursor-pointer text-black dark:text-white">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" />
+                            </svg>
+                        </label>
 
-                                    <input className='hidden' type="file" name='file' id={ fileId } multiple accept='image/*' onChange={ handleChangeImages } />
+                        <input className='hidden' type="file" name='file' id={ fileId } multiple accept='image/*' onChange={ handleChangeImages } />
 
-                                </div>
+                    </div>
 
                 </div>
             </div>
