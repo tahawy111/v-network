@@ -1,5 +1,5 @@
-import { setStatusModalShow } from '@/features/global/global';
 import { AppDispatch, RootState } from '@/features/store';
+import { setStatusModalShow } from '@/features/global';
 import { ChangeEvent, useId, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
@@ -12,6 +12,11 @@ export default function StatusModal({ }: StatusModalProps) {
     const dispatch: AppDispatch = useDispatch();
     const { auth } = useSelector((state: RootState) => state);
     const [content, setContent] = useState<string>("");
+
+    console.log("🚀 ---------------------------------------------------------------🚀");
+    console.log("🚀 ~ file: StatusModal.tsx:16 ~ StatusModal ~ content:", content);
+    console.log("🚀 ---------------------------------------------------------------🚀");
+
     const [images, setImages] = useState<(File | { camera: string; })[]>([]);
     const [stream, setStream] = useState<boolean>(false);
     const [tracks, setTracks] = useState<MediaStreamTrack>();
@@ -66,7 +71,7 @@ export default function StatusModal({ }: StatusModalProps) {
         let URL = canvasRef.current.toDataURL();
         setImages(prev => [...prev, { camera: URL }]);
     };
-
+    
     return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto'>
         <form className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
             <div className="flex justify-between items-center border-b border-gray-200 mb-2 py-3">
@@ -98,6 +103,8 @@ export default function StatusModal({ }: StatusModalProps) {
                         ))
                     }
                 </div>
+
+
 
                 <div className="flex relative justify-center items-center">
                     {

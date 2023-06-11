@@ -2,7 +2,7 @@ import { AppDispatch, RootState } from '@/features/store';
 import { } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StatusModal from "./StatusModal";
-import { setStatusModalShow } from '@/features/global/global';
+import { setStatusModalShow } from '@/features/global';
 
 interface StatusProps {
 

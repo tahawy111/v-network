@@ -1,6 +1,7 @@
 "use client";
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import type { PayloadAction } from '@reduxjs/toolkit';
+
+import { createSlice } from '@reduxjs/toolkit';
+
 
 export interface GlobalState {
   isLoading: boolean;
@@ -16,7 +17,8 @@ const initialState: GlobalState = {
   }
 };
 
-export const globalSlice = createSlice({
+
+export const authSlice = createSlice({
   name: 'global',
   initialState,
   reducers: {
@@ -33,6 +35,6 @@ export const globalSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { startLoading, stopLoading, setStatusModalShow } = globalSlice.actions;
+export const { startLoading, stopLoading, setStatusModalShow } = authSlice.actions;
 
-export default globalSlice.reducer;
+export default authSlice.reducer;

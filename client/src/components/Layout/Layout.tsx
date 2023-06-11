@@ -1,5 +1,5 @@
-import { setUser } from '@/features/auth/authSlice';
-import { startLoading, stopLoading } from '@/features/global/global';
+import { setUser } from '@/features/auth';
+import { startLoading, stopLoading } from '@/features/global';
 import { AppDispatch, RootState } from '@/features/store';
 import { getError } from '@/lib/getError';
 import axios from 'axios';

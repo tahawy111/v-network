@@ -4,7 +4,7 @@ import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { AppDispatch, RootState } from "@/features/store";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/features/auth/authSlice";
+import { logout } from "@/features/auth";
 import { useEffect, useState } from "react";
 import { useTheme } from 'next-themes';
 import Search from "./Search";

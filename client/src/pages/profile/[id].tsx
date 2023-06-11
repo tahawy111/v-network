@@ -3,7 +3,7 @@ import EditProfile from "@/components/Profile/EditProfile";
 import FollowBtn from "@/components/Profile/FollowBtn";
 import ShowFollowers from "@/components/Profile/ShowFollowers";
 import ShowFollowing from "@/components/Profile/showFollowing";
-import { startLoading, stopLoading } from "@/features/global/global";
+import { startLoading, stopLoading } from "@/features/global";
 import { AppDispatch, RootState } from "@/features/store";
 import { IUser } from "@/types/typescript";
 import axios from "axios";
