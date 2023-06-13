@@ -1,8 +1,12 @@
 import { AppDispatch, RootState } from '@/features/store';
-import { setStatusModalShow } from '@/features/global';
+import { setStatusModalShow, startLoading, stopLoading } from '@/features/global';
 import { ChangeEvent, useId, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
+import { IFormProps } from '@/types/typescript';
+import { imageUpload } from '@/lib/imageUpload';
+import axios from 'axios';
+import { getError } from '@/lib/getError';
 
 interface StatusModalProps {
 
@@ -71,9 +75,25 @@ export default function StatusModal({ }: StatusModalProps) {
         let URL = canvasRef.current.toDataURL();
         setImages(prev => [...prev, { camera: URL }]);
     };
-    
+
+    const submitHandler = async (e: IFormProps) => {
+        e.preventDefault();
+        if (images.length < 1) return toast.error("Please add your photo.");
+        try {
+            dispatch(startLoading());
+            const media = await imageUpload(images);
+            const { data } = await axios.post(`${process.env.API}/api/post`, { content, images: media }, { headers: { Authorization: auth.access_token } });
+            toast.success(data.msg);
+            dispatch(stopLoading());
+            dispatch(setStatusModalShow(false));
+        } catch (error) {
+            dispatch(stopLoading());
+            toast.error(getError(error));
+        }
+    };
+
     return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto'>
-        <form className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
+        <form onSubmit={ submitHandler } className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
             <div className="flex justify-between items-center border-b border-gray-200 mb-2 py-3">
                 <h5 className='m-0'>Create Post</h5>
                 <span className="cursor-pointer text-3xl font-black -translate-y-1" onClick={ () => dispatch(setStatusModalShow(false)) }>&times;</span>
@@ -141,9 +161,7 @@ export default function StatusModal({ }: StatusModalProps) {
                 </div>
             </div>
 
-            <div className="">
-                <div className="btn-dark text-center">Post</div>
-            </div>
+            <button className="btn-dark text-center">Post</button>
         </form>
     </div>;
 }

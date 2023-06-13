@@ -70,7 +70,7 @@ export default function EditProfile({ user, setOnEdit, setUser }: EditProfilePro
 
         <button className="btn-red absolute top-5 right-5" onClick={ () => setOnEdit(false) }>Close</button>
 
-        <div className="max-w-md w-full bg-white p-5 rounded-md mx-auto my-5">
+        <div className="max-w-md w-full bg-white p-5 rounded-md mx-auto my-5 dark:bg-main">
             <form onSubmit={ submitHandler }>
                 <div className="w-36 h-36 overflow-hidden rounded-full relative mx-auto my-4 border border-gray-100 cursor-pointer group">
                     <img className="w-full h-full block object-cover" src={ avatar ? avatar.preview : user.avatar.url } alt="" />

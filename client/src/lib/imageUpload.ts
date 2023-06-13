@@ -22,21 +22,44 @@ const generateSignature = (publicId: string, apiSecret: string) => {
     return `public_id=${publicId}&timestamp=${timestamp}${apiSecret}`;
 };
 
-export const imageUpload = async (file: File) => {
+export const imageUpload = async (file: File | (File | { camera: string; })[]) => {
     const cloudName = "dzdqy3wfg";
     const formData = new FormData();
+    let imgArr = [];
+    if (file instanceof Array) {
+        for (const item of file) {
+            formData.append("upload_preset", "ihkdmc1q");
+            formData.append("cloud_name", cloudName);
+            if ((item as { camera: string; }).camera) {
+                formData.append("file", (item as { camera: string; }).camera);
+            } else {
+                formData.append("file", item as File);
+            }
 
-    formData.append("file", file);
-    formData.append("upload_preset", "ihkdmc1q");
-    formData.append("cloud_name", cloudName);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+                method: "POST",
+                body: formData,
+            });
 
-    const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
-        method: "POST",
-        body: formData,
-    });
+            const data = await res.json();
+            imgArr.push({ public_id: data.public_id, url: data.secure_url });
+        }
 
-    const data = await res.json();
-    return { public_id: data.public_id, url: data.secure_url };
+        return imgArr;
+    } else {
+        formData.append("file", file);
+        formData.append("upload_preset", "ihkdmc1q");
+        formData.append("cloud_name", cloudName);
+
+        const res = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/upload`, {
+            method: "POST",
+            body: formData,
+        });
+
+        const data = await res.json();
+        return { public_id: data.public_id, url: data.secure_url };
+    }
+
 };
 
 
