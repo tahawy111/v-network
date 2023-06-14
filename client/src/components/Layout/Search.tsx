@@ -1,4 +1,4 @@
-import { RootState } from "@/features/store";
+import { RootState } from "@/redux/store";
 import { IUser } from "@/types/typescript";
 import axios from "axios";
 import Link from "next/link";

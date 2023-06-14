@@ -12,6 +12,7 @@ module.exports = {
         primary: `#5542f6`,
         highlight: `#eae8fb`,
         bgGray: `#fbfafd`,
+        muted: "#6c757d",
       },
     },
   },

@@ -1,6 +1,6 @@
 'use client';
 
-import { AppDispatch, store } from '@/features/store';
+import { AppDispatch, store } from '@/redux/store';
 import { FC, ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
 import { Provider } from 'react-redux';

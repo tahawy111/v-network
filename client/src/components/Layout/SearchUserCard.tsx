@@ -8,7 +8,7 @@ interface SearchUserCardProps {
 
 export default function SearchUserCard({ user, children }: SearchUserCardProps) {
     return <div className="">
-        <div className="flex bg-stone-50 p-1 items-center absolute w-full border border-slate-200 rounded-sm hover:underline">
+        <div className="flex bg-stone-50 p-1 items-center absolute w-full border border-slate-200 rounded-sm hover:underline dark:text-black">
             <img className="select-none w-5 md:w-10 block" src={ user?.avatar.url } />
             <div className="ml-1">
                 <span className="block">{ user.username }</span>

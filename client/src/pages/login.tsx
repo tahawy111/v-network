@@ -1,9 +1,9 @@
 "use client";
 import Input from '@/components/Custom-Ui/Input';
 import Layout from '@/components/Layout/Layout';
-import { login } from '@/features/auth';
-import { startLoading, stopLoading } from '@/features/global';
-import { AppDispatch, RootState } from '@/features/store';
+import { login } from '@/redux/features/auth';
+import { startLoading, stopLoading } from '@/redux/features/global';
+import { AppDispatch, RootState } from '@/redux/store';
 import { validEmail } from '@/lib/validation';
 import { IFormProps, InputChange } from '@/types/typescript';
 import Head from 'next/head';

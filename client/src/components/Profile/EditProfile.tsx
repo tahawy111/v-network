@@ -8,9 +8,9 @@ import { toast } from "react-hot-toast";
 import axios from "axios";
 import { getError } from "@/lib/getError";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "@/features/store";
-import { startLoading, stopLoading } from "@/features/global";
-import { setUser as setGlobalUser } from "@/features/auth";
+import { AppDispatch, RootState } from "@/redux/store";
+import { startLoading, stopLoading } from "@/redux/features/global";
+import { setUser as setGlobalUser } from "@/redux/features/auth";
 
 
 

@@ -1,4 +1,4 @@
-import { RootState } from '@/features/store';
+import { RootState } from '@/redux/store';
 import { FC } from 'react';
 import { useSelector } from 'react-redux'
 import { BounceLoader } from 'react-spinners';

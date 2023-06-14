@@ -2,9 +2,9 @@ import Link from "next/link";
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu';
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import { AppDispatch, RootState } from "@/features/store";
+import { AppDispatch, RootState } from "@/redux/store";
 import { useDispatch, useSelector } from "react-redux";
-import { logout } from "@/features/auth";
+import { logout } from "@/redux/features/auth";
 import { useEffect, useState } from "react";
 import { useTheme } from 'next-themes';
 import Search from "./Search";
@@ -27,6 +27,8 @@ export default function Header({ }: HeaderProps) {
   useEffect(() => {
     setMobileNavActive(false);
   }, []);
+
+
   const normalLink = `dark:text-white md:text-slate-100 text-slate-800`;
   const nonActiveLink = normalLink + " opacity-50";
   const activeLink = normalLink + " opacity-100";
@@ -68,9 +70,9 @@ export default function Header({ }: HeaderProps) {
           <DropdownMenu.Root>
             <DropdownMenu.Trigger className="group" asChild>
               <span className="flex items-center w-12 md:ml-0">
-                <div><img className="select-none w-10 md:w-20" src={ user?.avatar.url } /></div>
+                <div><img className="select-none w-10 md:w-20 rounded-full" src={ user?.avatar.url } /></div>
 
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 text-black dark:text-white relative group-active:rotate-180 group-data-[state=open]:rotate-180">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-5 h-5 md:text-white relative group-active:rotate-180 text-black dark:text-white group-data-[state=open]:rotate-180">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                 </svg>
               </span>
@@ -84,8 +86,11 @@ export default function Header({ }: HeaderProps) {
                 <DropdownMenu.Item className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
                   <Link href={ `/profile/${user?._id}` }>Profile</Link>
                 </DropdownMenu.Item>
-                <DropdownMenu.Item onClick={ () => theme === "dark" ? setTheme("light") : setTheme("dark") } className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
+                {/* <DropdownMenu.Item onClick={ () => theme === "dark" ? setTheme("light") : setTheme("dark") } className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
                   { theme === "dark" ? "Light Mode" : "Dark Mode" }
+                </DropdownMenu.Item> */}
+                <DropdownMenu.Item onClick={ () => theme === "system" && window.matchMedia('(prefers-color-scheme: dark)').matches ? setTheme("light") : theme === "dark" ? setTheme("light") : setTheme("dark") } className="group text-[13px] leading-none text-violet11 rounded-[3px] flex items-center h-[25px] px-[5px] relative pl-[25px] select-none outline-none data-[disabled]:text-mauve8 data-[disabled]:pointer-events-none data-[highlighted]:bg-violet9 data-[highlighted]:text-violet1 hover:bg-slate-600 hover:text-white">
+                  { theme === "system" && window.matchMedia('(prefers-color-scheme: dark)').matches ? "Light Mode" : theme === "dark" ? "Light Mode" : "Dark Mode" }
                 </DropdownMenu.Item>
 
                 <hr />

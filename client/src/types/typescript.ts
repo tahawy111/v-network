@@ -21,3 +21,14 @@ export interface IUser {
     following: IUser[];
     saved: string;
 }
+
+export interface IPost {
+    _id: string;
+    content: string;
+    images: any;
+    likes: any[];
+    comments: any[];
+    user: IUser;
+    createdAt: Date;
+    updatedAt: Date;
+}

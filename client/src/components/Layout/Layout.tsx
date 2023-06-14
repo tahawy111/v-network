@@ -1,6 +1,6 @@
-import { setUser } from '@/features/auth';
-import { startLoading, stopLoading } from '@/features/global';
-import { AppDispatch, RootState } from '@/features/store';
+import { setUser } from '@/redux/features/auth';
+import { startLoading, stopLoading } from '@/redux/features/global';
+import { AppDispatch, RootState } from '@/redux/store';
 import { getError } from '@/lib/getError';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -9,6 +9,8 @@ import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import Header from './Header';
 import { useRouter } from 'next/router';
+import { getPosts } from '@/redux/features/post';
+import Spinner from '../Custom-Ui/Spinner';
 
 interface LayoutProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     children: ReactNode;
@@ -27,22 +29,32 @@ const Layout: FC<LayoutProps> = ({ children }) => {
                     dispatch(setUser(data));
                 }
             } catch (error) {
-                // localStorage.removeItem("firstLogin");
-                // Cookies.remove("refreshtoken", { path: "api/auth/accessToken" });
+                localStorage.removeItem("firstLogin");
+                Cookies.remove("refreshtoken", { path: "api/auth/accessToken" });
             }
         };
 
         fetchData();
     }, [dispatch]);
+
+    useEffect(() => {
+        access_token && dispatch(getPosts(access_token));
+    }, [dispatch, access_token]);
+
     const router = useRouter();
 
 
     return <div>
-        { access_token && <Header /> }
-        <div className='container mx-auto'>
-        { children }
-        </div>
-        </div>;
+        {
+            !access_token ? <Spinner /> :
+                <>
+                    <Header />
+                    <div className='container mx-auto'>
+                        { children }
+                    </div>
+                </>
+        }
+    </div>;
 };
 
 export default Layout;

@@ -4,6 +4,6 @@ import auth from "../middleware/auth";
 
 const router = Router();
 
-router.route('/').post(auth, postCtrl.createPost);
+router.route('/').post(auth, postCtrl.createPost).get(auth, postCtrl.getPosts);
 
 export default router;

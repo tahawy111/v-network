@@ -1,5 +1,5 @@
-import { AppDispatch, RootState } from '@/features/store';
-import { setStatusModalShow, startLoading, stopLoading } from '@/features/global';
+import { AppDispatch, RootState } from '@/redux/store';
+import { setStatusModalShow, startLoading, stopLoading } from '@/redux/features/global';
 import { ChangeEvent, useId, useRef, useState } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
