@@ -41,6 +41,12 @@ export const postSlice = createSlice({
     reducers: {
         onEdit: (state: PostState, action) => {
             return { ...state, onEdit: action.payload.onEdit, postToEdit: action.payload.post };
+        },
+        likePost: (state: PostState, action) => {
+            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.post._id)
+            const newPost = { ...action.payload.post, likes: [...action.payload.post.likes, action.payload.auth.user._id] };
+            state.posts[indexOfPost] = newPost;
+            await axios
         }
     },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {
@@ -68,6 +74,6 @@ export const postSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { onEdit } = postSlice.actions;
+export const { onEdit, likePost } = postSlice.actions;
 
 export default postSlice.reducer;
