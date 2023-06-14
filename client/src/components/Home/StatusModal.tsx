@@ -1,6 +1,6 @@
 import { AppDispatch, RootState } from '@/redux/store';
 import { setStatusModalShow, startLoading, stopLoading } from '@/redux/features/global';
-import { ChangeEvent, useId, useRef, useState } from 'react';
+import { ChangeEvent, useId, useRef, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { useDispatch, useSelector } from 'react-redux';
 import { IFormProps } from '@/types/typescript';
@@ -15,9 +15,9 @@ interface StatusModalProps {
 
 export default function StatusModal({ }: StatusModalProps) {
     const dispatch: AppDispatch = useDispatch();
-    const { auth } = useSelector((state: RootState) => state);
+    const { auth, post } = useSelector((state: RootState) => state);
     const [content, setContent] = useState<string>("");
-    const [images, setImages] = useState<(File | { camera: string; })[]>([]);
+    const [images, setImages] = useState<(File | { camera: string; } | { public_id: string; url: string; })[]>([]);
     const [stream, setStream] = useState<boolean>(false);
     const [tracks, setTracks] = useState<MediaStreamTrack>();
     const fileId = useId();
@@ -71,13 +71,12 @@ export default function StatusModal({ }: StatusModalProps) {
         let URL = canvasRef.current.toDataURL();
         setImages(prev => [...prev, { camera: URL }]);
     };
-
     const submitHandler = async (e: IFormProps) => {
         e.preventDefault();
         if (images.length < 1) return toast.error("Please add your photo.");
         try {
             dispatch(startLoading());
-            const media = await imageUpload(images);
+            const media = await imageUpload(images as any);
             const { data } = await axios.post(`${process.env.API}/api/post`, { content, images: media }, { headers: { Authorization: auth.access_token } });
             toast.success(data.msg);
             dispatch(stopLoading());
@@ -89,8 +88,17 @@ export default function StatusModal({ }: StatusModalProps) {
         }
     };
 
+    useEffect(() => {
+        if (post.onEdit && post.postToEdit) {
+            setContent(post.postToEdit?.content);
+            setImages(post.postToEdit.images);
+        }
+    }, []);
+
+    const updateHandler = () => {}
+
     return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto'>
-        <form onSubmit={ submitHandler } className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
+        <form onSubmit={ post.onEdit && post.postToEdit ? updateHandler : submitHandler } className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
             <div className="flex justify-between items-center border-b border-gray-200 mb-2 py-3">
                 <h5 className='m-0'>Create Post</h5>
                 <span className="cursor-pointer text-3xl font-black -translate-y-1" onClick={ () => dispatch(setStatusModalShow(false)) }>&times;</span>
@@ -120,7 +128,7 @@ export default function StatusModal({ }: StatusModalProps) {
                     {
                         images.map((img, index) => (
                             <div className='w-full h-full relative' key={ index }>
-                                <img src={ img instanceof File ? URL.createObjectURL(img) : img.camera } alt="images" className='w-full h-full block object-contain border-gray-200 border p-1 rounded-md' />
+                                <img src={ img instanceof File ? URL.createObjectURL(img) : (img as any).camera ? (img as any).camera : (img as any).url } alt="images" className='w-full h-full block object-contain border-gray-200 border p-1 rounded-md' />
                                 <span onClick={ () => deleteImage(index) } className='cursor-pointer text-xl font-bold absolute top-1 right-1 bg-white border border-red-500 text-red-500 rounded-full px-2 py-0.5 transition-colors duration-150 hover:bg-red-500 hover:text-white hover:border-white pt-0 ease-out'>&times;</span>
                             </div>
                         ))
@@ -158,7 +166,7 @@ export default function StatusModal({ }: StatusModalProps) {
                 </div>
             </div>
 
-            <button className="btn-dark text-center">Post</button>
+            <button className="btn-dark text-center">{ post.onEdit && post.postToEdit ? "Update" : "Post" }</button>
         </form>
     </div>;
 }

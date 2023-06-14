@@ -46,13 +46,12 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     return <div>
         {
-            !access_token ? <Spinner /> :
-                <>
-                    <Header />
-                    <div className='container mx-auto'>
-                        { children }
-                    </div>
-                </>
+            <>
+                { access_token && <Header /> }
+                <div className='container mx-auto'>
+                    { children }
+                </div>
+            </>
         }
     </div>;
 };

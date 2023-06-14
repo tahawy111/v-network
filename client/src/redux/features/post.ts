@@ -22,6 +22,8 @@ export interface PostState {
     posts: IPost[],
     isError: boolean;
     loading: boolean;
+    onEdit: boolean;
+    postToEdit: null | IPost;
 }
 
 const initialState: PostState = {
@@ -29,12 +31,18 @@ const initialState: PostState = {
     posts: [],
     isError: false,
     loading: false,
+    onEdit: false,
+    postToEdit: null
 };
 
 export const postSlice = createSlice({
     name: 'post',
     initialState,
-    reducers: {},
+    reducers: {
+        onEdit: (state: PostState, action) => {
+            return { ...state, onEdit: action.payload.onEdit, postToEdit: action.payload.post };
+        }
+    },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {
         // Get Posts
         builder.addCase(getPosts.pending, (state: PostState) => {
@@ -60,6 +68,6 @@ export const postSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { } = postSlice.actions;
+export const { onEdit } = postSlice.actions;
 
 export default postSlice.reducer;
