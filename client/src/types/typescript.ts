@@ -25,7 +25,7 @@ export interface IUser {
 export interface IPost {
     _id: string;
     content: string;
-    images: any;
+    images: { public_id: string; url: string; }[];
     likes: any[];
     comments: any[];
     user: IUser;

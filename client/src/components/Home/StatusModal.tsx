@@ -7,6 +7,7 @@ import { IFormProps } from '@/types/typescript';
 import { imageUpload } from '@/lib/imageUpload';
 import axios from 'axios';
 import { getError } from '@/lib/getError';
+import { getPosts } from '@/redux/features/post';
 
 interface StatusModalProps {
 
@@ -16,11 +17,6 @@ export default function StatusModal({ }: StatusModalProps) {
     const dispatch: AppDispatch = useDispatch();
     const { auth } = useSelector((state: RootState) => state);
     const [content, setContent] = useState<string>("");
-
-    console.log("🚀 ---------------------------------------------------------------🚀");
-    console.log("🚀 ~ file: StatusModal.tsx:16 ~ StatusModal ~ content:", content);
-    console.log("🚀 ---------------------------------------------------------------🚀");
-
     const [images, setImages] = useState<(File | { camera: string; })[]>([]);
     const [stream, setStream] = useState<boolean>(false);
     const [tracks, setTracks] = useState<MediaStreamTrack>();
@@ -86,6 +82,7 @@ export default function StatusModal({ }: StatusModalProps) {
             toast.success(data.msg);
             dispatch(stopLoading());
             dispatch(setStatusModalShow(false));
+            auth.access_token && dispatch(getPosts(auth.access_token));
         } catch (error) {
             dispatch(stopLoading());
             toast.error(getError(error));

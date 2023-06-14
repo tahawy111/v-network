@@ -14,7 +14,7 @@ export default function Posts({ }: PostsProps) {
   return <div>
 
     { !post.loading && post.posts.length > 0 && post.posts.map((post) => (
-      <div className="w-full shadow-md rounded-md" key={ post._id }>
+      <div className="w-full shadow-sm rounded-sm border border-gray-300 my-3" key={ post._id }>
         <CardHeader post={ post } />
         <CardBody post={ post } />
         <CardFooter post={ post } />
