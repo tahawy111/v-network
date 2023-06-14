@@ -1,10 +1,11 @@
 import { IPost } from '@/types/typescript';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import LikeBtn from './LikeBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { likePost } from '@/redux/features/post';
+import axios from 'axios';
 
 interface CardFooterProps {
   post: IPost;
@@ -20,12 +21,25 @@ export default function CardFooter({ post }: CardFooterProps) {
     setIsLike(true);
     setLoadLike(true);
     dispatch(likePost({ post, auth }));
-    setLoadLike(false)
+    await axios.put(`${process.env.API}/api/post/like/${post._id}`, { likeUserId: auth.user?._id }, { headers: { Authorization: auth.access_token } });
+    setLoadLike(false);
   };
 
-  const handleUnLike = () => {
+  const handleUnLike = async () => {
+    if (loadLike) return;
     setIsLike(false);
+    setLoadLike(true);
+    dispatch(unLikePost({ post, auth }));
+    await axios.put(`${process.env.API}/api/post/unLike/${post._id}`, { likeUserId: auth.user?._id }, { headers: { Authorization: auth.access_token } });
+    setLoadLike(false);
+
   };
+
+  useEffect(() => {
+    if (post.likes.find(like => like._id === auth.user?._id)) {
+      setIsLike(true);
+    }
+  }, [post.likes, auth.user?._id]);
 
   return <div className='px-3'>
     <div className="flex justify-between cursor-pointer">

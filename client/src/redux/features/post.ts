@@ -46,7 +46,6 @@ export const postSlice = createSlice({
             const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.post._id)
             const newPost = { ...action.payload.post, likes: [...action.payload.post.likes, action.payload.auth.user._id] };
             state.posts[indexOfPost] = newPost;
-            await axios
         }
     },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {

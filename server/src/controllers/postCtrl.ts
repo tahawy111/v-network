@@ -43,6 +43,36 @@ const postCtrl = {
 
         }
     },
+    like: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            const { likeUserId } = req.body;
+            const post = await Post.findByIdAndUpdate(req.params.id, {
+                $push: { likes: likeUserId }
+            }, { new: true }).populate("user likes", "avatar username fullname");
+
+            console.log(post);
+
+            res.json({ msg: "Post Updated!", post });
+        } catch (error) {
+
+        }
+    },
+    unLike: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            const { likeUserId } = req.body;
+            const post = await Post.findByIdAndUpdate(req.params.id, {
+                $pull: { likes: likeUserId }
+            }, { new: true }).populate("user likes", "avatar username fullname");
+
+            console.log(post);
+
+            res.json({ msg: "Post Updated!", post });
+        } catch (error) {
+
+        }
+    },
 };
 
 export default postCtrl;
