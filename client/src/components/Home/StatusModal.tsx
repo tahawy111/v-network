@@ -7,17 +7,18 @@ import { IFormProps } from '@/types/typescript';
 import { imageUpload } from '@/lib/imageUpload';
 import axios from 'axios';
 import { getError } from '@/lib/getError';
-import { getPosts } from '@/redux/features/post';
+import { getPosts, onEdit } from '@/redux/features/post';
 
 interface StatusModalProps {
 
 }
 
 export default function StatusModal({ }: StatusModalProps) {
+    type imgType = (File | { camera: string; } | { public_id: string; url: string; });
     const dispatch: AppDispatch = useDispatch();
     const { auth, post } = useSelector((state: RootState) => state);
     const [content, setContent] = useState<string>("");
-    const [images, setImages] = useState<(File | { camera: string; } | { public_id: string; url: string; })[]>([]);
+    const [images, setImages] = useState<imgType[]>([]);
     const [stream, setStream] = useState<boolean>(false);
     const [tracks, setTracks] = useState<MediaStreamTrack>();
     const fileId = useId();
@@ -95,7 +96,24 @@ export default function StatusModal({ }: StatusModalProps) {
         }
     }, []);
 
-    const updateHandler = () => {}
+
+    const updateHandler = async (e: IFormProps) => {
+        e.preventDefault();
+        try {
+            const imagesNotToUpload = images.filter((img: any) => img.url);
+            const imagesToUpload = images.filter((img: any) => !img.url);
+            dispatch(startLoading());
+            const media = await imageUpload(imagesToUpload as File[]);
+            await axios.put(`${process.env.API}/api/post/${post.postToEdit?._id}`, { content, images: [...imagesNotToUpload, ...media as imgType[]] }, { headers: { Authorization: auth.access_token } });
+            auth.access_token && dispatch(getPosts(auth.access_token));
+            dispatch(onEdit({ post: null, onEdit: false }));
+            dispatch(setStatusModalShow(false));
+            dispatch(stopLoading());
+        } catch (error) {
+
+        }
+
+    };
 
     return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto'>
         <form onSubmit={ post.onEdit && post.postToEdit ? updateHandler : submitHandler } className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">

@@ -30,6 +30,19 @@ const postCtrl = {
 
         }
     },
+    updatePost: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            const { content, images } = req.body;
+            const post = await Post.findByIdAndUpdate(req.params.id, { content, images }, { new: true }).populate("user likes", "avatar username fullname");
+
+            console.log(post);
+
+            res.json({ msg: "Post Updated!", post });
+        } catch (error) {
+
+        }
+    },
 };
 
 export default postCtrl;

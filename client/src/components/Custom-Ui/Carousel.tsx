@@ -21,21 +21,15 @@ const ProductImages: FC<ProductImagesProps> = ({ images }) => {
 
     return <>
 
-        <div className={``}>
+        <div className={`relative`}>
             <img className='border border-[#ddd] rounded-lg p-1 w-full object-contain h-[520px]' src={images[imgIndex].url} alt={images[imgIndex].url} />
-            <div className={`flex m-3 justify-center items-center`}>
+            <div className={`flex m-3 justify-between items-center`}>
 
-                <svg onClick={() => (getThis(document) as Document).getElementById(DevImgsId)!.scrollLeft -= 100} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-12 h-12 cursor-pointer select-none ${images.length < 3 && "pointer-events-none opacity-50 -z-[1]"}`}>
+                <svg onClick={() => setImgIndex((prev) => prev - 1 < 0 ? prev : prev - 1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`absolute -translate-y-1/2 bg-gray-100/40 rounded-md dark:bg-gray-100/10 border border-gray-800 text-gray-800 left-1 top-1/2 w-12 h-12 cursor-pointer select-none ${images.length < 3 && "pointer-events-none opacity-50 -z-[1]"}`}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
                 </svg>
 
-                <div id={DevImgsId} className={`flex overflow-auto transition-transform duration-150 gap-x-3 scroll-smooth scrollbar-hide`}>
-                    {images.map(({ url }, index) => (
-                        <img key={index} className={`transition-transform duration-150 h-[80px] w-[80px] cursor-pointer object-cover border border-[#ddd] rounded-lg p-1 hover:border-[#79612d] ${index === imgIndex ? "border-black" : ""}`} onClick={() => setImgIndex(index)} src={url} alt={url} />
-                    ))}
-                </div>
-
-                <svg onClick={() => (getThis(document) as Document).getElementById(DevImgsId)!.scrollLeft += 100} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`w-12 h-12 cursor-pointer select-none ${images.length < 3 && "pointer-events-none opacity-50 -z-[1]"}`}>
+                <svg onClick={() => setImgIndex((prev) => prev + 2 > images.length ? prev : prev + 1)} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={`absolute right-1 bg-gray-100/40 rounded-md dark:bg-gray-100/10 border border-gray-800 text-gray-800 -translate-y-1/2 top-1/2 w-12 h-12 cursor-pointer select-none ${images.length < 3 && "pointer-events-none opacity-50 -z-[1]"}`}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                 </svg>
 
