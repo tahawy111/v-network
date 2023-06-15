@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import LikeBtn from './LikeBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
-import { likePost } from '@/redux/features/post';
+import { likePost, unLikePost } from '@/redux/features/post';
 import axios from 'axios';
 
 interface CardFooterProps {

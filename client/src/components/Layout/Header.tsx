@@ -42,7 +42,7 @@ export default function Header({ }: HeaderProps) {
 
       <Search />
 
-      <ul className={ `dark:bg-main bg-white md:gap-3 gap-0 items-center md:justify-normal justify-evenly flex md:static fixed bottom-0 left-0 w-full md:w-fit shadow-sm shadow-black p-2 dark:shadow-white md:shadow-none z-[8]` }>
+      <ul className={ `dark:bg-main md:bg-transparent bg-white md:gap-3 gap-0 items-center md:justify-normal justify-evenly flex md:static fixed bottom-0 left-0 w-full md:w-fit shadow-sm shadow-black p-2 dark:shadow-white md:shadow-none z-[8]` }>
         <li>
           <Link href={ `/` }><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className={ `w-6 h-6 ${isActive(`/`) ? activeLink : nonActiveLink}` }>
             <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />

@@ -13,8 +13,8 @@ export default function Posts({ }: PostsProps) {
   const { post } = useSelector((state: RootState) => state);
   return <div>
 
-    { !post.loading && post.posts.length > 0 && post.posts.map((post) => (
-      <div className="w-full shadow-sm rounded-sm border border-gray-300 my-3" key={ post._id }>
+    { !post.loading && post.posts.length > 0 && post.posts.map((post,index) => (
+      <div className="w-full shadow-sm rounded-sm border border-gray-300 my-3" key={ index }>
         <CardHeader post={ post } />
         <CardBody post={ post } />
         <CardFooter post={ post } />

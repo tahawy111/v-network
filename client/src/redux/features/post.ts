@@ -43,10 +43,18 @@ export const postSlice = createSlice({
             return { ...state, onEdit: action.payload.onEdit, postToEdit: action.payload.post };
         },
         likePost: (state: PostState, action) => {
-            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.post._id)
+            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.post._id);
             const newPost = { ...action.payload.post, likes: [...action.payload.post.likes, action.payload.auth.user._id] };
             state.posts[indexOfPost] = newPost;
-        }
+        },
+        unLikePost: (state: PostState, action) => {
+            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.post._id);
+           state.posts[indexOfPost].likes = state.posts[indexOfPost].likes.filter(like => like === action.payload.post._id)
+            
+            // const newPost = { ...action.payload.post, likes: [...action.payload.post.likes, action.payload.auth.user._id] };
+            // const filterdPosts = [...state.posts].filter(post => post.likes !== action.payload.post._id);
+            // state.posts = filterdPosts;
+        },
     },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {
         // Get Posts
@@ -73,6 +81,6 @@ export const postSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { onEdit, likePost } = postSlice.actions;
+export const { onEdit, likePost, unLikePost } = postSlice.actions;
 
 export default postSlice.reducer;
