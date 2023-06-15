@@ -74,9 +74,9 @@ export default function StatusModal({ }: StatusModalProps) {
     };
     const submitHandler = async (e: IFormProps) => {
         e.preventDefault();
+        dispatch(startLoading());
         if (images.length < 1) return toast.error("Please add your photo.");
         try {
-            dispatch(startLoading());
             const media = await imageUpload(images as any);
             const { data } = await axios.post(`${process.env.API}/api/post`, { content, images: media }, { headers: { Authorization: auth.access_token } });
             toast.success(data.msg);
@@ -115,7 +115,7 @@ export default function StatusModal({ }: StatusModalProps) {
 
     };
 
-    return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto'>
+    return <div className='fixed top-0 left-0 bg-black/50 w-full h-screen overflow-auto z-[9]'>
         <form onSubmit={ post.onEdit && post.postToEdit ? updateHandler : submitHandler } className="max-w-md w-full bg-white dark:bg-main flex flex-col gap-y-2 mx-auto my-8 p-5 rounded-md">
             <div className="flex justify-between items-center border-b border-gray-200 mb-2 py-3">
                 <h5 className='m-0'>Create Post</h5>
@@ -142,7 +142,7 @@ export default function StatusModal({ }: StatusModalProps) {
                     )
                 }
 
-                <div className="max-h-64 w-full overflow-y-auto grid grid-cols-3 gap-3 place-items-center">
+                <div className={`max-h-64 w-full overflow-y-auto grid  gap-3 place-items-center grid-cols-3`}>
                     {
                         images.map((img, index) => (
                             <div className='w-full h-full relative' key={ index }>
