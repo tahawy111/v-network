@@ -4,19 +4,14 @@ import { Schema, model } from 'mongoose';
 export interface IComment {
     _id: string;
     content: string;
-    images: any;
-    likes: any[];
-    comments: any[];
-    user: Schema.Types.ObjectId
+    tag: object;
+    
 }
 
 // 2. Create a Schema corresponding to the document interface.
 const commentSchema = new Schema<IComment>({
-    content: String,
-    images: { type: Array, default: [] },
-    likes: [{ type: Schema.Types.ObjectId, ref: 'user' }],
-    comments: [{ type: Schema.Types.ObjectId, ref: 'comment' }],
-    user: { type: Schema.Types.ObjectId, ref: 'user' }
+    content: { type: String, required: true },
+    tag: Object
 }, {
     timestamps: true
 });
