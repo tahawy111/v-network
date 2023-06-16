@@ -19,7 +19,7 @@ export default function Home() {
         <div className="md:col-span-8 col-span-12">
           <Status />
           {
-            post.loading ? <Spinner loading /> : post.posts.length < 1 ? <h2 className='text-2xl'>No Post</h2> : <Posts />
+            post.loading ? <Spinner loading /> : post.posts.length < 1 ? <Spinner loading /> : <Posts />
           }
         </div>
         <div className="col-span-4"></div>

@@ -15,7 +15,7 @@ const commentCtrl = {
                 $push: { comments: newComment._id }
             }, { new: true });
 
-            await newComment.save();
+            await (await newComment.save()).populate("user likes")
 
             res.json({ newComment });
 

@@ -27,8 +27,21 @@ export interface IPost {
     content: string;
     images: { public_id: string; url: string; }[];
     likes: any[];
-    comments: any[];
+    comments: IComment[];
     user: IUser;
     createdAt: Date;
     updatedAt: Date;
 }
+
+export interface IComment {
+    _id: string;
+    content: string;
+    tag: object;
+    reply: string;
+    likes: string[];
+    user: IUser;
+    postId: string;
+    postUserId: string;
+    createdAt: Date;
+}
+

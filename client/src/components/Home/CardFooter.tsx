@@ -7,6 +7,7 @@ import { AppDispatch, RootState } from '@/redux/store';
 import { likePost, unLikePost } from '@/redux/features/post';
 import axios from 'axios';
 import CommentInput from '../Custom-Ui/CommentInput';
+import Comments from './Comments';
 
 interface CardFooterProps {
   post: IPost;
@@ -75,8 +76,7 @@ export default function CardFooter({ post }: CardFooterProps) {
       <h2 className='text-3xl'>Comments</h2>
 
     </div>
-    <CommentInput post={ post }>
-
-    </CommentInput>
+    <Comments post={ post } />
+    <CommentInput post={ post } />
   </div>;
 }

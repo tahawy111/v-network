@@ -74,8 +74,8 @@ export default function StatusModal({ }: StatusModalProps) {
     };
     const submitHandler = async (e: IFormProps) => {
         e.preventDefault();
-        dispatch(startLoading());
         if (images.length < 1) return toast.error("Please add your photo.");
+        dispatch(startLoading());
         try {
             const media = await imageUpload(images as any);
             const { data } = await axios.post(`${process.env.API}/api/post`, { content, images: media }, { headers: { Authorization: auth.access_token } });
