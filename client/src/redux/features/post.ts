@@ -1,6 +1,6 @@
 "use client";
 import { getError } from '@/lib/getError';
-import { IPost, IUser } from '@/types/typescript';
+import { IComment, IPost, IUser } from '@/types/typescript';
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { toast } from 'react-hot-toast';
@@ -54,7 +54,22 @@ export const postSlice = createSlice({
         createComment: (state: PostState, action) => {
             const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.postId);
             state.posts[indexOfPost].comments.push(action.payload);
-        }
+        },
+        updateComment: (state: PostState, action) => {
+            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.postId);
+            const indexOfComment = state.posts[indexOfPost].comments.findIndex((comment: IComment) => comment._id === action.payload.comment._id);
+            state.posts[indexOfPost].comments[indexOfComment] = action.payload.comment;
+        },
+        likeComment: (state: PostState, action) => {
+            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.postId);
+            const indexOfComment = state.posts[indexOfPost].comments.findIndex((comment: IComment) => comment._id === action.payload.comment._id);
+            state.posts[indexOfPost].comments[indexOfComment] = action.payload.comment;
+        },
+        unLikeComment: (state: PostState, action) => {
+            const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.postId);
+            const indexOfComment = state.posts[indexOfPost].comments.findIndex((comment: IComment) => comment._id === action.payload.comment._id);
+            state.posts[indexOfPost].comments[indexOfComment] = action.payload.comment
+        },
     },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {
         // Get Posts
@@ -81,6 +96,6 @@ export const postSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { onEdit, likePost, unLikePost, createComment } = postSlice.actions;
+export const { onEdit, likePost, unLikePost, createComment, updateComment, likeComment, unLikeComment } = postSlice.actions;
 
 export default postSlice.reducer;

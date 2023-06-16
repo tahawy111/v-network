@@ -38,9 +38,13 @@ export default function CardFooter({ post }: CardFooterProps) {
   };
 
   useEffect(() => {
+    
     if (post.likes.find(like => like._id === auth.user?._id)) {
       setIsLike(true);
     }
+    
+    
+
   }, [post.likes, auth.user?._id]);
 
   return <div className="">

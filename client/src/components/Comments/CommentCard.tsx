@@ -1,11 +1,13 @@
-import { IComment, IPost } from '@/types/typescript';
+import { IComment, IPost, IUser } from '@/types/typescript';
 import moment from 'moment';
 import Link from 'next/link';
 import { useEffect, useId, useState } from 'react';
 import LikeBtn from '../Home/LikeBtn';
-import { useSelector } from 'react-redux';
-import { RootState } from '@/redux/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/redux/store';
 import CommentMenu from './CommentMenu';
+import axios from 'axios';
+import { likeComment, unLikeComment, updateComment } from '@/redux/features/post';
 
 interface CommentCardProps {
     comment: IComment;
@@ -16,21 +18,64 @@ interface CommentCardProps {
 
 export default function CommentCard({ comment, post }: CommentCardProps) {
     const { auth } = useSelector((state: RootState) => state);
+    const dispatch: AppDispatch = useDispatch();
     const [content, setContent] = useState<string>("");
     const [readMore, setReadMore] = useState<boolean>(false);
+    
     const [isLike, setIsLike] = useState<boolean>(false);
-    const commentDivId = useId()
-    const handleLike = () => {
+    const [onEdit, setOnEdit] = useState<boolean>(false);
+    const [loadLike, setLoadLike] = useState<boolean>(false);
 
-    };
+    const handleUpdate = async () => {
+        if (comment.content !== content) {
+            const { data } = await axios.put(`${process.env.API}/api/comment/${comment._id}`, { content }, { headers: { Authorization: auth.access_token } });
+            dispatch(updateComment({ comment: data.comment, postId: post._id }));
+            setOnEdit(false);
+        } else {
+            setOnEdit(false);
 
-    const handleUnLike = () => {
-
+        }
     };
 
     useEffect(() => {
         setContent(comment.content);
     }, []);
+
+    useEffect(() => {
+        // const indexOfLike = comment.likes.indexOf(auth.user as IUser)
+        // if(indexOfLike !== -1) setIsLike(true)
+        // else setIsLike(false)
+        if(comment.likes.find(like => like._id === auth.user?._id)) {
+            setIsLike(true)
+        }
+    },[comment.likes,auth.user?._id])
+
+    const handleLike = async () => {
+        if (loadLike) return;
+        setIsLike(true);
+        setLoadLike(true);
+
+
+        const { data } = await axios.put(`${process.env.API}/api/comment/like/${comment._id}`, {}, { headers: { Authorization: auth.access_token } });
+
+        dispatch(likeComment({ comment: data.comment, postId: post._id, userId: auth.user?._id }));
+
+
+        setLoadLike(false);
+    };
+
+
+
+
+    const handleUnLike = async () => {
+        if (loadLike) return;
+        setIsLike(false);
+        setLoadLike(true);
+        const { data } = await axios.put(`${process.env.API}/api/comment/unLike/${comment._id}`, {}, { headers: { Authorization: auth.access_token } });
+        dispatch(unLikeComment({ comment: data.comment, postId: post._id, userId: auth.user?._id }));
+        setLoadLike(false);
+
+    };
 
     return <div className={ `mt-2 ${comment._id ? "opacity-100 pointer-events-[inherit]" : "opacity-50 pointer-events-none"}` }>
         <Link className='flex text-stone-800 dark:text-stone-100 items-center' href={ `/profile/${comment.user._id}` }>
@@ -40,20 +85,23 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
 
         <div className="bg-neutral-200 dark:bg-neutral-200/10 p-2 border rounded-md rounded-tl-none my-2 border-none grid grid-cols-12 items-center">
             <div className="flex-1 col-span-11">
-                <div  className={ `max-w-full` }>
-                    <div className={`text-ellipsis overflow-auto`}>
-                        {
-                            content.length < 100 ? content : readMore ? content + "" : content.slice(0, 60) + "...."
-                        }
-                    </div>
+                {
+                    onEdit ? (<textarea className='border-none outline-none bg-inherit resize-none shadow-none' rows={ 5 } value={ content } onChange={ (e) => setContent(e.target.value) } />)
+                        : (<div className={ `max-w-full` }>
+                            <div className={ `text-ellipsis overflow-auto max-h-56` }>
+                                {
+                                    content.length < 100 ? content : readMore ? content + "" : content.slice(0, 60) + "...."
+                                }
+                            </div>
 
-                    {
-                        content.length > 100 &&
-                        <span className='cursor-pointer text-red-500' onClick={ () => setReadMore((prev) => !prev) }>
-                            { readMore ? "Hide Content" : "Read More" }
-                        </span>
-                    }
-                </div>
+                            {
+                                content.length > 100 &&
+                                <span className='cursor-pointer text-red-500' onClick={ () => setReadMore((prev) => !prev) }>
+                                    { readMore ? "Hide Content" : "Read More" }
+                                </span>
+                            }
+                        </div>)
+                }
 
 
 
@@ -64,16 +112,25 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
                     <small className='mr-3 font-bold'>
                         { comment.likes.length } Likes
                     </small>
-                    <small className='mr-3 font-bold'>
-                        Reply
-                    </small>
+                    { onEdit
+                        ? (<>
+                            <small onClick={ () => setOnEdit(false) } className='mr-3 font-bold'>
+                                Cancel
+                            </small>
+                            <small onClick={ handleUpdate } className='mr-3 font-bold'>
+                                Update
+                            </small>
+                        </>)
+                        : (<small className='mr-3 font-bold'>
+                            Reply
+                        </small>) }
                 </div>
 
 
             </div>
 
             <div className="flex cursor-pointer col-span-1">
-                <CommentMenu post={ post } comment={ comment } auth={ auth } />
+                { auth.user?._id === comment.user._id && <CommentMenu post={ post } comment={ comment } auth={ auth } setOnEdit={ setOnEdit } /> }
                 <LikeBtn isLike={ isLike } handleLike={ handleLike } handleUnLike={ handleUnLike } />
             </div>
         </div>

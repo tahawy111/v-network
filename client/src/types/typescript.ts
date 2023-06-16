@@ -38,7 +38,7 @@ export interface IComment {
     content: string;
     tag: object;
     reply: string;
-    likes: string[];
+    likes: IUser[];
     user: IUser;
     postId: string;
     postUserId: string;
