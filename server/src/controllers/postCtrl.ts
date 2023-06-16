@@ -21,7 +21,10 @@ const postCtrl = {
         if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
         try {
 
-            const posts = await Post.find({ user: [...req.user?.following, req.user._id] }).populate("user likes", "avatar username fullname").sort({ createdAt: -1 });
+            const posts = await Post.find({ user: [...req.user?.following, req.user._id] })
+                .populate("user likes", "avatar username fullname")
+                .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
+                .sort({ createdAt: -1 });
 
             console.log(posts);
 
