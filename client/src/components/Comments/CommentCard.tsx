@@ -42,9 +42,6 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
     }, []);
 
     useEffect(() => {
-        // const indexOfLike = comment.likes.indexOf(auth.user as IUser)
-        // if(indexOfLike !== -1) setIsLike(true)
-        // else setIsLike(false)
         if(comment.likes.find(like => like._id === auth.user?._id)) {
             setIsLike(true)
         }
