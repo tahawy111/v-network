@@ -9,5 +9,5 @@ interface CommentDisplayProps {
 
 export default function CommentDisplay({ comment, post }: CommentDisplayProps) {
     const [newComment, setNewComment] = useState<boolean>(false);
-    return <div className='py-2 px-6'><CommentCard newComment={newComment} setNewComment={setNewComment} comment={ comment } post={ post } /></div>;
+    return <div className='py-2 px-6'><CommentCard newComment={newComment} setNewComment={setNewComment} comment={ comment } post={ post } commentId={comment._id} /></div>;
 }

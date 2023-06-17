@@ -8,23 +8,27 @@ import { AppDispatch, RootState } from '@/redux/store';
 import CommentMenu from './CommentMenu';
 import axios from 'axios';
 import { likeComment, unLikeComment, updateComment } from '@/redux/features/post';
+import CommentInput from '../Custom-Ui/CommentInput';
 
 interface CommentCardProps {
     comment: IComment;
     post: IPost;
     newComment: boolean;
     setNewComment: (arg: boolean) => void;
+    commentId: string;
 }
 
-export default function CommentCard({ comment, post }: CommentCardProps) {
+export default function CommentCard({ comment, post, commentId }: CommentCardProps) {
     const { auth } = useSelector((state: RootState) => state);
     const dispatch: AppDispatch = useDispatch();
     const [content, setContent] = useState<string>("");
     const [readMore, setReadMore] = useState<boolean>(false);
-    
     const [isLike, setIsLike] = useState<boolean>(false);
     const [onEdit, setOnEdit] = useState<boolean>(false);
     const [loadLike, setLoadLike] = useState<boolean>(false);
+    const [reply, setReply] = useState<{ onReply: boolean; comment: IComment; }>({ onReply: false, comment });
+
+
 
     const handleUpdate = async () => {
         if (comment.content !== content) {
@@ -42,10 +46,10 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
     }, []);
 
     useEffect(() => {
-        if(comment.likes.find(like => like._id === auth.user?._id)) {
-            setIsLike(true)
+        if (comment.likes.find(like => like._id === auth.user?._id)) {
+            setIsLike(true);
         }
-    },[comment.likes,auth.user?._id])
+    }, [comment.likes, auth.user?._id]);
 
     const handleLike = async () => {
         if (loadLike) return;
@@ -62,8 +66,6 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
     };
 
 
-
-
     const handleUnLike = async () => {
         if (loadLike) return;
         setIsLike(false);
@@ -73,6 +75,17 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
         setLoadLike(false);
 
     };
+
+    const handleReply = () => {
+        if (reply.onReply) return setReply((prev => {
+            return { ...prev, onReply: false };
+        }));
+        setReply((prev => {
+            return { ...prev, onReply: true, comment: { ...comment, commentId } };
+        }));
+    };
+
+
 
     return <div className={ `mt-2 ${comment._id ? "opacity-100 pointer-events-[inherit]" : "opacity-50 pointer-events-none"}` }>
         <Link className='flex text-stone-800 dark:text-stone-100 items-center' href={ `/profile/${comment.user._id}` }>
@@ -118,8 +131,8 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
                                 Update
                             </small>
                         </>)
-                        : (<small className='mr-3 font-bold'>
-                            Reply
+                        : (<small onClick={ handleReply } className='mr-3 font-bold'>
+                            { reply.onReply ? "Cancel" : "Reply" }
                         </small>) }
                 </div>
 
@@ -131,5 +144,10 @@ export default function CommentCard({ comment, post }: CommentCardProps) {
                 <LikeBtn isLike={ isLike } handleLike={ handleLike } handleUnLike={ handleUnLike } />
             </div>
         </div>
+
+        { reply.onReply && (
+            <CommentInput post={ post } reply={ reply } setReply={ setReply } />
+        ) }
+
     </div>;
 }
