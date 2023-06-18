@@ -36,7 +36,7 @@ export interface IPost {
 export interface IComment {
     _id: string;
     content: string;
-    tag: object;
+    tag: IUser;
     reply: string;
     likes: IUser[];
     user: IUser;

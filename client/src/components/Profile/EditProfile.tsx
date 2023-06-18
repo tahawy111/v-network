@@ -65,7 +65,7 @@ export default function EditProfile({ user, setOnEdit, setUser }: EditProfilePro
     };
 
 
-    return <div className="w-full fixed top-0 left-0 h-screen bg-[#0008] overflow-auto">
+    return <div className="w-full fixed top-0 left-0 h-screen bg-[#0008] overflow-auto z-[9]">
 
 
         <button className="btn-red absolute top-5 right-5" onClick={ () => setOnEdit(false) }>Close</button>

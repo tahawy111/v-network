@@ -1,7 +1,7 @@
 import { IComment, IPost, IUser } from '@/types/typescript';
 import moment from 'moment';
 import Link from 'next/link';
-import { useEffect, useId, useState } from 'react';
+import { ReactNode, useEffect, useId, useState } from 'react';
 import LikeBtn from '../Home/LikeBtn';
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
@@ -13,12 +13,13 @@ import CommentInput from '../Custom-Ui/CommentInput';
 interface CommentCardProps {
     comment: IComment;
     post: IPost;
-    newComment: boolean;
-    setNewComment: (arg: boolean) => void;
+    newComment?: boolean;
+    setNewComment?: (arg: boolean) => void;
     commentId: string;
+    children?: ReactNode;
 }
 
-export default function CommentCard({ comment, post, commentId }: CommentCardProps) {
+export default function CommentCard({ comment, post, commentId, children }: CommentCardProps) {
     const { auth } = useSelector((state: RootState) => state);
     const dispatch: AppDispatch = useDispatch();
     const [content, setContent] = useState<string>("");
@@ -46,6 +47,9 @@ export default function CommentCard({ comment, post, commentId }: CommentCardPro
     }, []);
 
     useEffect(() => {
+        setReply((prev) => {
+            return { ...prev, onReply: false };
+        });
         if (comment.likes.find(like => like._id === auth.user?._id)) {
             setIsLike(true);
         }
@@ -94,10 +98,16 @@ export default function CommentCard({ comment, post, commentId }: CommentCardPro
         </Link>
 
         <div className="bg-neutral-200 dark:bg-neutral-200/10 p-2 border rounded-md rounded-tl-none my-2 border-none grid grid-cols-12 items-center">
-            <div className="flex-1 col-span-11">
+            <div className="flex-1 col-span-9 sm:col-span-10 md:col-span-11">
                 {
                     onEdit ? (<textarea className='border-none outline-none bg-inherit resize-none shadow-none' rows={ 5 } value={ content } onChange={ (e) => setContent(e.target.value) } />)
-                        : (<div className={ `max-w-full` }>
+                        : (<div className={ `max-w-full flex` }>
+                            {
+                                comment.tag && comment.tag._id !== comment.user._id &&
+                                <Link href={ `/profile/${comment.tag._id}` } className='mr-1 text-blue-400 font-semibold hover:underline'>
+                                    @{ comment.tag.username }
+                                </Link>
+                            }
                             <div className={ `text-ellipsis overflow-auto max-h-56` }>
                                 {
                                     content.length < 100 ? content : readMore ? content + "" : content.slice(0, 60) + "...."
@@ -139,15 +149,21 @@ export default function CommentCard({ comment, post, commentId }: CommentCardPro
 
             </div>
 
-            <div className="flex cursor-pointer col-span-1">
+            <div className="flex cursor-pointer col-span-3 sm:col-span-2 md:col-span-1">
                 { auth.user?._id === comment.user._id && <CommentMenu post={ post } comment={ comment } auth={ auth } setOnEdit={ setOnEdit } /> }
                 <LikeBtn isLike={ isLike } handleLike={ handleLike } handleUnLike={ handleUnLike } />
             </div>
         </div>
 
         { reply.onReply && (
-            <CommentInput post={ post } reply={ reply } setReply={ setReply } />
+            <CommentInput post={ post } reply={ reply } setReply={ setReply } >
+                <Link href={ `/profile/${reply.comment.user._id}` } className='mr-1 text-blue-400 font-semibold'>
+                    @{ reply.comment.user.username }:
+                </Link>
+            </CommentInput>
         ) }
+
+        { children }
 
     </div>;
 }
