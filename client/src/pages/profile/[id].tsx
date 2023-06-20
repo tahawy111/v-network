@@ -1,11 +1,16 @@
+import CardBody from "@/components/Home/CardBody";
+import CardFooter from "@/components/Home/CardFooter";
+import CardHeader from "@/components/Home/CardHeader";
+import StatusModal from "@/components/Home/StatusModal";
 import Layout from "@/components/Layout/Layout";
 import EditProfile from "@/components/Profile/EditProfile";
 import FollowBtn from "@/components/Profile/FollowBtn";
 import ShowFollowers from "@/components/Profile/ShowFollowers";
 import ShowFollowing from "@/components/Profile/showFollowing";
 import { startLoading, stopLoading } from "@/redux/features/global";
+import { getUserPosts } from "@/redux/features/post";
 import { AppDispatch, RootState } from "@/redux/store";
-import { IUser } from "@/types/typescript";
+import { IPost, IUser } from "@/types/typescript";
 import axios from "axios";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -19,8 +24,10 @@ interface ProfileProps {
 export default function Profile({ }: ProfileProps) {
     const { id } = useRouter().query;
     const [user, setUser] = useState<IUser>();
+    const [userPosts, setUserPosts] = useState<IPost[]>();
     const dispatch: AppDispatch = useDispatch();
-    const loggedUser = useSelector((state: RootState) => state.auth.user);
+    const { user: loggedUser, access_token } = useSelector((state: RootState) => state.auth);
+    const { global, post } = useSelector((state: RootState) => state);
     const [onEdit, setOnEdit] = useState<boolean>(false);
     const [isFollowersOpen, setIsFollowersOpen] = useState<boolean>(false);
     const [isFollowingOpen, setIsFollowingOpen] = useState<boolean>(false);
@@ -42,6 +49,14 @@ export default function Profile({ }: ProfileProps) {
             fetchData();
         }
     }, [id]);
+
+    useEffect(() => {
+
+        if (id && access_token) {
+            dispatch(getUserPosts({ id: id as string, access_token }));
+        }
+
+    }, [id, access_token]);
 
 
     return <Layout>
@@ -72,5 +87,13 @@ export default function Profile({ }: ProfileProps) {
                 </div>
             </div>
         </div>
+        { post.userPosts && post.userPosts.map((post, index) => (
+            <div className="w-full shadow-sm rounded-sm border border-gray-300 dark:border-gray-300/30 my-3" key={ index }>
+                <CardHeader post={ post } />
+                <CardBody post={ post } />
+                <CardFooter post={ post } />
+            </div>
+        )) }
+        { global.status.statusModalShow && <StatusModal isInHomePage={ false } isInProfilePage /> }
     </Layout>;
 }

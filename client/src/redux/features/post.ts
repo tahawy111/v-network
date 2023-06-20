@@ -16,6 +16,20 @@ export const getPosts = createAsyncThunk(
         }
     }
 );
+export const getUserPosts = createAsyncThunk(
+    "post/getUserPosts",
+    async ({ id, access_token }: { id: string, access_token: string; }, thunkAPI) => {
+
+        try {
+            const res = await axios.get(`${process.env.API}/api/post/userPosts/${id}`, { headers: { Authorization: access_token } });
+            console.log("userPosts", res);
+
+            return thunkAPI.fulfillWithValue(res.data);
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(getError(error));
+        }
+    }
+);
 
 export interface PostState {
     message: string | null,
@@ -24,6 +38,7 @@ export interface PostState {
     loading: boolean;
     onEdit: boolean;
     postToEdit: null | IPost;
+    userPosts: IPost[],
 }
 
 const initialState: PostState = {
@@ -32,7 +47,8 @@ const initialState: PostState = {
     isError: false,
     loading: false,
     onEdit: false,
-    postToEdit: null
+    postToEdit: null,
+    userPosts: [],
 };
 
 export const postSlice = createSlice({
@@ -68,7 +84,7 @@ export const postSlice = createSlice({
         unLikeComment: (state: PostState, action) => {
             const indexOfPost = state.posts.findIndex((post) => post._id === action.payload.postId);
             const indexOfComment = state.posts[indexOfPost].comments.findIndex((comment: IComment) => comment._id === action.payload.comment._id);
-            state.posts[indexOfPost].comments[indexOfComment] = action.payload.comment
+            state.posts[indexOfPost].comments[indexOfComment] = action.payload.comment;
         },
     },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {
@@ -87,6 +103,26 @@ export const postSlice = createSlice({
         });
         builder.addCase(
             getPosts.rejected,
+            (state: PostState, action) => {
+                toast.error(`${action.payload}`);
+                return { ...state, message: action.payload as string, isError: true, loading: false };
+            }
+        );
+        // Get User Posts
+        builder.addCase(getUserPosts.pending, (state: PostState) => {
+            return { ...state, message: null, isError: false, loading: true };
+        });
+        builder.addCase(getUserPosts.fulfilled, (state: PostState, action) => {
+            // toast.success(`${action.payload.msg}`);
+            return {
+                ...state,
+                userPosts: action.payload.posts,
+                message: action.payload.msg,
+                loading: false
+            };
+        });
+        builder.addCase(
+            getUserPosts.rejected,
             (state: PostState, action) => {
                 toast.error(`${action.payload}`);
                 return { ...state, message: action.payload as string, isError: true, loading: false };

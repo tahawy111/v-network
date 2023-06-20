@@ -13,7 +13,7 @@ export default function Status({ }: StatusProps) {
     const dispatch: AppDispatch = useDispatch();
     const { user } = auth;
     return <div className={`my-3 shadow-md p-3 rounded-md dark:shadow-gray-100/10 ${!user ? "hidden" : "flex"}`}>
-        { global.status.statusModalShow && <StatusModal /> }
+        { global.status.statusModalShow && <StatusModal isInHomePage isInProfilePage={ false } /> }
         <img src={ user?.avatar?.url } alt="" className="w-16 h-16 rounded-full" />
 
         <button onClick={ () => dispatch(setStatusModalShow(true)) } className="bg-gray-200 rounded-full text-zinc-800 px-3 m-1 flex-1 text-left hover:bg-gray-300">{ user?.username }, What are you thinking?</button>

@@ -7,13 +7,14 @@ import { IFormProps } from '@/types/typescript';
 import { imageUpload } from '@/lib/imageUpload';
 import axios from 'axios';
 import { getError } from '@/lib/getError';
-import { getPosts, onEdit } from '@/redux/features/post';
+import { getPosts, getUserPosts, onEdit } from '@/redux/features/post';
 
 interface StatusModalProps {
-
+    isInHomePage: boolean;
+    isInProfilePage: boolean;
 }
 
-export default function StatusModal({ }: StatusModalProps) {
+export default function StatusModal({ isInHomePage, isInProfilePage }: StatusModalProps) {
     type imgType = (File | { camera: string; } | { public_id: string; url: string; });
     const dispatch: AppDispatch = useDispatch();
     const { auth, post } = useSelector((state: RootState) => state);
@@ -82,7 +83,9 @@ export default function StatusModal({ }: StatusModalProps) {
             toast.success(data.msg);
             dispatch(stopLoading());
             dispatch(setStatusModalShow(false));
-            auth.access_token && dispatch(getPosts(auth.access_token));
+            auth.access_token && isInHomePage && !isInProfilePage && dispatch(getPosts(auth.access_token));
+            auth.access_token && isInProfilePage && !isInHomePage && dispatch(getUserPosts({ id: post.postToEdit?._id as string, access_token: auth.access_token }));
+
         } catch (error) {
             dispatch(stopLoading());
             toast.error(getError(error));
@@ -105,7 +108,10 @@ export default function StatusModal({ }: StatusModalProps) {
             dispatch(startLoading());
             const media = await imageUpload(imagesToUpload as File[]);
             await axios.put(`${process.env.API}/api/post/${post.postToEdit?._id}`, { content, images: [...imagesNotToUpload, ...media as imgType[]] }, { headers: { Authorization: auth.access_token } });
-            auth.access_token && dispatch(getPosts(auth.access_token));
+            auth.access_token && isInHomePage && !isInProfilePage && dispatch(getPosts(auth.access_token));
+            console.log({id: post.postToEdit?._id as string, access_token: auth.access_token});
+            
+            auth.access_token && isInProfilePage && !isInHomePage && dispatch(getUserPosts({ id: post.postToEdit?._id as string, access_token: auth.access_token }));
             dispatch(onEdit({ post: null, onEdit: false }));
             dispatch(setStatusModalShow(false));
             dispatch(stopLoading());
@@ -142,7 +148,7 @@ export default function StatusModal({ }: StatusModalProps) {
                     )
                 }
 
-                <div className={`max-h-64 w-full overflow-y-auto grid  gap-3 place-items-center grid-cols-3`}>
+                <div className={ `max-h-64 w-full overflow-y-auto grid  gap-3 place-items-center grid-cols-3` }>
                     {
                         images.map((img, index) => (
                             <div className='w-full h-full relative' key={ index }>

@@ -26,8 +26,6 @@ const postCtrl = {
                 .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
                 .sort({ createdAt: -1 });
 
-            console.log(posts);
-
             res.json({ msg: "Success!", posts });
         } catch (error) {
 
@@ -54,8 +52,6 @@ const postCtrl = {
                 $push: { likes: likeUserId }
             }, { new: true }).populate("user likes", "avatar username fullname");
 
-            console.log(post);
-
             res.json({ msg: "Post Updated!", post });
         } catch (error) {
 
@@ -69,9 +65,24 @@ const postCtrl = {
                 $pull: { likes: likeUserId }
             }, { new: true }).populate("user likes", "avatar username fullname");
 
-            console.log(post);
-
             res.json({ msg: "Post Updated!", post });
+        } catch (error) {
+
+        }
+    },
+    getUserPosts: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            console.log("userPosts", req.params.id);
+            const posts = await Post.find({ user: req.params.id })
+            .populate("user likes", "avatar username fullname")
+            .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
+            .sort({ createdAt: -1 });
+
+            console.log("userPosts",posts);
+            
+
+            res.json({ posts });
         } catch (error) {
 
         }
