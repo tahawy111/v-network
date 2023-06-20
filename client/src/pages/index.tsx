@@ -18,9 +18,9 @@ export default function Home() {
       <div className='grid grid-cols-12 mx-0'>
         <div className="md:col-span-8 col-span-12">
           <Status />
-          {
-            post.loading ? <Spinner loading /> : post.posts.length < 1 ? <Spinner loading /> : <Posts />
-          }
+
+          <Posts />
+
         </div>
         <div className="col-span-4"></div>
       </div>

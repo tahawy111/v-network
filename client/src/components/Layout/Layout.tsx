@@ -38,7 +38,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     }, [dispatch]);
 
     useEffect(() => {
-        access_token && dispatch(getPosts(access_token));
+        access_token && dispatch(getPosts({ access_token, page: 1 }));
     }, [dispatch, access_token]);
 
     const router = useRouter();

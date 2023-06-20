@@ -7,9 +7,9 @@ import { toast } from 'react-hot-toast';
 
 export const getPosts = createAsyncThunk(
     "post/getPosts",
-    async (access_token: string, thunkAPI) => {
+    async ({ access_token, page }: { access_token: string, page: number; }, thunkAPI) => {
         try {
-            const res = await axios.get(`${process.env.API}/api/post`, { headers: { Authorization: access_token } });
+            const res = await axios.get(`${process.env.API}/api/post?skip=0&page=${page}&limit=${page * 3}`, { headers: { Authorization: access_token } });
             return thunkAPI.fulfillWithValue(res.data);
         } catch (error: any) {
             return thunkAPI.rejectWithValue(getError(error));
@@ -18,11 +18,10 @@ export const getPosts = createAsyncThunk(
 );
 export const getUserPosts = createAsyncThunk(
     "post/getUserPosts",
-    async ({ id, access_token }: { id: string, access_token: string; }, thunkAPI) => {
+    async ({ id, access_token, page }: { id: string, access_token: string; page: number; }, thunkAPI) => {
 
         try {
-            const res = await axios.get(`${process.env.API}/api/post/userPosts/${id}`, { headers: { Authorization: access_token } });
-            console.log("userPosts", res);
+        const res = await axios.get(`${process.env.API}/api/post/userPosts/${id}?page=${page}&limit=${page * 3}`, { headers: { Authorization: access_token } });
 
             return thunkAPI.fulfillWithValue(res.data);
         } catch (error: any) {
@@ -38,7 +37,10 @@ export interface PostState {
     loading: boolean;
     onEdit: boolean;
     postToEdit: null | IPost;
-    userPosts: IPost[],
+    userPosts: IPost[];
+    page: number;
+    postsLength: number;
+    isLoading: boolean;
 }
 
 const initialState: PostState = {
@@ -49,6 +51,9 @@ const initialState: PostState = {
     onEdit: false,
     postToEdit: null,
     userPosts: [],
+    page: 1,
+    postsLength: 0,
+    isLoading: false,
 };
 
 export const postSlice = createSlice({
@@ -86,31 +91,35 @@ export const postSlice = createSlice({
             const indexOfComment = state.posts[indexOfPost].comments.findIndex((comment: IComment) => comment._id === action.payload.comment._id);
             state.posts[indexOfPost].comments[indexOfComment] = action.payload.comment;
         },
+        increasePage: (state: PostState, action) => {
+            state.page += action.payload;
+        },
     },
     extraReducers: (builder: ActionReducerMapBuilder<PostState>) => {
         // Get Posts
         builder.addCase(getPosts.pending, (state: PostState) => {
-            return { ...state, message: null, isError: false, loading: true };
+            return { ...state, message: null, isError: false, isLoading: true };
         });
         builder.addCase(getPosts.fulfilled, (state: PostState, action) => {
             // toast.success(`${action.payload.msg}`);
             return {
                 ...state,
                 posts: action.payload.posts,
+                postsLength: action.payload.postsLength,
                 message: action.payload.msg,
-                loading: false
+                isLoading: false
             };
         });
         builder.addCase(
             getPosts.rejected,
             (state: PostState, action) => {
                 toast.error(`${action.payload}`);
-                return { ...state, message: action.payload as string, isError: true, loading: false };
+                return { ...state, message: action.payload as string, isError: true, isLoading: false };
             }
         );
         // Get User Posts
         builder.addCase(getUserPosts.pending, (state: PostState) => {
-            return { ...state, message: null, isError: false, loading: true };
+            return { ...state, message: null, isError: false, isLoading: true };
         });
         builder.addCase(getUserPosts.fulfilled, (state: PostState, action) => {
             // toast.success(`${action.payload.msg}`);
@@ -118,20 +127,21 @@ export const postSlice = createSlice({
                 ...state,
                 userPosts: action.payload.posts,
                 message: action.payload.msg,
-                loading: false
+                postsLength: action.payload.postsLength,
+                isLoading: false
             };
         });
         builder.addCase(
             getUserPosts.rejected,
             (state: PostState, action) => {
                 toast.error(`${action.payload}`);
-                return { ...state, message: action.payload as string, isError: true, loading: false };
+                return { ...state, message: action.payload as string, isError: true, isLoading: false };
             }
         );
     }
 });
 
 // Action creators are generated for each case reducer function
-export const { onEdit, likePost, unLikePost, createComment, updateComment, likeComment, unLikeComment } = postSlice.actions;
+export const { onEdit, likePost, unLikePost, createComment, updateComment, likeComment, unLikeComment, increasePage } = postSlice.actions;
 
 export default postSlice.reducer;

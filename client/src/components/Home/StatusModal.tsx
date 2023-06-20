@@ -17,7 +17,7 @@ interface StatusModalProps {
 export default function StatusModal({ isInHomePage, isInProfilePage }: StatusModalProps) {
     type imgType = (File | { camera: string; } | { public_id: string; url: string; });
     const dispatch: AppDispatch = useDispatch();
-    const { auth, post } = useSelector((state: RootState) => state);
+    const { auth, post, global } = useSelector((state: RootState) => state);
     const [content, setContent] = useState<string>("");
     const [images, setImages] = useState<imgType[]>([]);
     const [stream, setStream] = useState<boolean>(false);
@@ -83,9 +83,6 @@ export default function StatusModal({ isInHomePage, isInProfilePage }: StatusMod
             toast.success(data.msg);
             dispatch(stopLoading());
             dispatch(setStatusModalShow(false));
-            auth.access_token && isInHomePage && !isInProfilePage && dispatch(getPosts(auth.access_token));
-            auth.access_token && isInProfilePage && !isInHomePage && dispatch(getUserPosts({ id: post.postToEdit?._id as string, access_token: auth.access_token }));
-
         } catch (error) {
             dispatch(stopLoading());
             toast.error(getError(error));
@@ -109,11 +106,11 @@ export default function StatusModal({ isInHomePage, isInProfilePage }: StatusMod
             const media = await imageUpload(imagesToUpload as File[]);
             await axios.put(`${process.env.API}/api/post/${post.postToEdit?._id}`, { content, images: [...imagesNotToUpload, ...media as imgType[]] }, { headers: { Authorization: auth.access_token } });
             auth.access_token && isInHomePage && !isInProfilePage && dispatch(getPosts(auth.access_token));
-            console.log({id: post.postToEdit?._id as string, access_token: auth.access_token});
-            
-            auth.access_token && isInProfilePage && !isInHomePage && dispatch(getUserPosts({ id: post.postToEdit?._id as string, access_token: auth.access_token }));
-            dispatch(onEdit({ post: null, onEdit: false }));
+            console.log({ id: post.postToEdit?._id as string, access_token: auth.access_token });
+
             dispatch(setStatusModalShow(false));
+            auth.access_token && isInProfilePage && !isInHomePage && await dispatch(getUserPosts({ id: auth.user?._id as string, access_token: auth.access_token }));
+            dispatch(onEdit({ post: null, onEdit: false }));
             dispatch(stopLoading());
         } catch (error) {
 

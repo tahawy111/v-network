@@ -12,7 +12,7 @@ const Spinner: FC<SpinnerProps> = ({ loading }) => {
     const myLoad = loading ? loading : isLoading;
     return <div
         className={`${myLoad ? "flex" : "hidden"
-            } fixed w-full h-screen text-center justify-center items-center text-white top-0 left-0 z-[8]`}
+            } fixed w-full h-screen text-center justify-center items-center text-white top-0 left-0 z-[1000]`}
         style={{ background: "#0007" }}
     >
         <BounceLoader color='#1e3a8a' speedMultiplier={2} />

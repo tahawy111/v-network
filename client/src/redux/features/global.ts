@@ -8,13 +8,15 @@ export interface GlobalState {
   status: {
     statusModalShow: boolean;
   };
+  profileId: string;
 }
 
 const initialState: GlobalState = {
   isLoading: false,
   status: {
-    statusModalShow: false
-  }
+    statusModalShow: false,
+  },
+  profileId: ""
 };
 
 
@@ -31,10 +33,13 @@ export const authSlice = createSlice({
     setStatusModalShow: (state, action) => {
       return { ...state, status: { statusModalShow: action.payload } };
     },
+    setProfileId: (state, action) => {
+      return { ...state, profileId: action.payload };
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { startLoading, stopLoading, setStatusModalShow } = authSlice.actions;
+export const { startLoading, stopLoading, setStatusModalShow, setProfileId } = authSlice.actions;
 
 export default authSlice.reducer;
