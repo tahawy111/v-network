@@ -1,6 +1,7 @@
 import { Response } from "express";
 import { IReqAuth } from "../types/typescript";
 import Post from "../models/Post";
+import Comment from "../models/Comment";
 
 
 export const Pagination = (
@@ -112,6 +113,18 @@ const postCtrl = {
 
 
             res.json({ posts, postsLength: (await Post.find()).length });
+        } catch (error) {
+
+        }
+    },
+    deletePost: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            const deletedPost = await Post.findByIdAndDelete(req.params.id);
+
+            await Comment.findByIdAndDelete(deletedPost?.comments);
+
+            res.json({ msg: "Post Deleted✔✔✔" });
         } catch (error) {
 
         }

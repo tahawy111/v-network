@@ -106,7 +106,7 @@ export default function Profile({ }: ProfileProps) {
 
             { post.userPosts && post.userPosts.map((post, index) => (
                 <div className="w-full shadow-sm rounded-sm border border-gray-300 dark:border-gray-300/30 my-3" key={ index }>
-                    <CardHeader post={ post } />
+                    <CardHeader inProfile post={ post } />
                     <CardBody post={ post } />
                     <CardFooter post={ post } />
                 </div>

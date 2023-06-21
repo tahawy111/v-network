@@ -38,7 +38,7 @@ export default function discover({ }: discoverProps) {
 
       { post.discoverPosts && post.discoverPosts.map((post, index) => (
         <div className="w-full shadow-sm rounded-sm border border-gray-300 dark:border-gray-300/30 my-3" key={ index }>
-          <CardHeader post={ post } />
+          <CardHeader inDiscover post={ post } />
           <CardBody post={ post } />
           <CardFooter post={ post } />
         </div>
