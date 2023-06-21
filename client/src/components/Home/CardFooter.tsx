@@ -8,6 +8,7 @@ import { likePost, unLikePost } from '@/redux/features/post';
 import axios from 'axios';
 import CommentInput from '../Custom-Ui/CommentInput';
 import Comments from './Comments';
+import { setUser } from '@/redux/features/auth';
 
 interface CardFooterProps {
   post: IPost;
@@ -38,14 +39,33 @@ export default function CardFooter({ post }: CardFooterProps) {
   };
 
   useEffect(() => {
-    
+
     if (post.likes.find(like => like._id === auth.user?._id)) {
       setIsLike(true);
     }
-    
-    
+
 
   }, [post.likes, auth.user?._id]);
+
+
+  const handleSave = async () => {
+
+    try {
+      const { data } = await axios.get(`${process.env.API}/api/post/savePost/${post._id}`, { headers: { Authorization: auth.access_token } });
+      dispatch(setUser(data.user));
+    } catch (error) {
+
+    }
+
+  };
+  const handleUnSave = async () => {
+    try {
+      const { data } = await axios.get(`${process.env.API}/api/post/unSavePost/${post._id}`, { headers: { Authorization: auth.access_token } });
+      dispatch(setUser(data.user));
+    } catch (error) {
+
+    }
+  };
 
   return <div className="">
     <div className='px-3'>
@@ -66,7 +86,7 @@ export default function CardFooter({ post }: CardFooterProps) {
 
         </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" className="w-6 h-6 text-2xl">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" onClick={ auth.user?.saved.findIndex(pst => pst._id === post._id) === -1 ? handleSave : handleUnSave } className={ `w-6 h-6 text-2xl text-red-500 ${auth.user?.saved.findIndex(pst => pst._id === post._id) !== -1 && "fill-red-500"}` }>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
         </svg>
 

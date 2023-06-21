@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/redux/store';
 import { startLoading } from '@/redux/features/global';
 import Spinner from '@/components/Custom-Ui/Spinner';
+import RightSidebar from '@/components/Home/RightSidebar';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -22,7 +23,9 @@ export default function Home() {
           <Posts />
 
         </div>
-        <div className="col-span-4"></div>
+        <div className="col-span-4 m-3">
+          <RightSidebar />
+        </div>
       </div>
     </Layout>
   );

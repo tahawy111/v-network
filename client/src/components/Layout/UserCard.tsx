@@ -1,4 +1,5 @@
 import { IUser } from "@/types/typescript";
+import Link from "next/link";
 
 interface UserCardProps {
     user: IUser;
@@ -8,14 +9,16 @@ interface UserCardProps {
 export default function UserCard({ user, children }: UserCardProps) {
 
 
-        return <div className="flex bg-stone-50 p-1 items-center w-full border border-slate-200 rounded-sm hover:underline justify-between">
-            <div className="flex">
-                <img className="select-none w-5 md:w-10 block object-contain" src={ user?.avatar.url } />
+    return <div className="flex p-1 items-center w-full hover:underline justify-between">
+        <Link className="w-full" href={ `/profile/${user._id}` }>
+            <div className="flex items-center gap-x-3">
+                { user.avatar && <img className="select-none w-10 h-10 md:w-10 block object-contain rounded-full" src={ user?.avatar.url } /> }
                 <div className="ml-1">
                     <span className="block">{ user.username }</span>
                     <small>{ user.fullname }</small>
                 </div>
             </div>
-            { children && <div className="">{ children }</div> }
-        </div>;
+        </Link>
+        { children && <div className="">{ children }</div> }
+    </div>;
 }

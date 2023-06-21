@@ -5,6 +5,7 @@ import auth from "../middleware/auth";
 const router = Router();
 
 router.get('/search', userCtrl.searchUsers);
+router.get('/suggestions', auth, userCtrl.suggestions);
 router.get('/:id', userCtrl.getUser);
 router.put('/', auth, userCtrl.updateUser);
 router.put('/follow', auth, userCtrl.follow);

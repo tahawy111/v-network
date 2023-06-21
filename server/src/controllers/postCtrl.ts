@@ -2,6 +2,7 @@ import { Response } from "express";
 import { IReqAuth } from "../types/typescript";
 import Post from "../models/Post";
 import Comment from "../models/Comment";
+import User from "../models/User";
 
 
 export const Pagination = (
@@ -108,7 +109,7 @@ const postCtrl = {
         try {
             const posts = await Post.find()
                 .populate("user likes", "avatar username fullname")
-                .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
+                .populate({ path: "comments", populate: { path: "user likes", select: "-password", populate: { path: "saved" } } })
                 .sort({ createdAt: -1 }).limit(limit);
 
 
@@ -125,6 +126,34 @@ const postCtrl = {
             await Comment.findByIdAndDelete(deletedPost?.comments);
 
             res.json({ msg: "Post Deleted✔✔✔" });
+        } catch (error) {
+
+        }
+    },
+    savePost: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            const savedPost = await Post.findById(req.params.id);
+
+
+
+            const user = await User.findByIdAndUpdate(req.user._id, { $push: { saved: savedPost?._id } }, { new: true });
+
+            res.json({ msg: "Post Saved✔✔✔", user });
+        } catch (error) {
+
+        }
+    },
+    unSavePost: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        try {
+            const savedPost = await Post.findById(req.params.id);
+
+
+
+            const user = await User.findByIdAndUpdate(req.user._id, { $pull: { saved: savedPost?._id } }, { new: true });
+
+            res.json({ msg: "Post Saved✔✔✔", user });
         } catch (error) {
 
         }

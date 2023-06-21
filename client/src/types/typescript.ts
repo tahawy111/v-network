@@ -19,7 +19,7 @@ export interface IUser {
     website: string;
     followers: IUser[];
     following: IUser[];
-    saved: string;
+    saved: IPost[];
 }
 
 export interface IPost {

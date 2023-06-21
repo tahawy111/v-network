@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import User, { IUser } from "../models/User";
 import { IReqAuth } from "../types/typescript";
+import { Document } from "mongoose";
 
 const userCtrl = {
     searchUsers: async (req: Request, res: Response) => {
@@ -42,7 +43,8 @@ const userCtrl = {
             const followerId = req.user?._id as any;
             const userFollowed = await User.findById(followedId).select(`-password`).populate("followers following");
             if (!userFollowed) return res.status(404).json({ msg: 'This user is not exist.' });
-            if (userFollowed.followers.map((user) => user._id === followedId).length > 0) return res.status(403).json({ msg: 'This user is already in the followers list.' });
+            // if (userFollowed.followers.map((user) => user._id === followedId).length > 0 && userFollowed.followers.map((user) => user._id === followedId)[0] !== falsee) return res.status(403).json({ msg: 'This user is already in the followers list.' });
+            if (userFollowed.followers.findIndex((user) => user._id === followedId) !== -1) return res.status(403).json({ msg: 'This user is already in the followers list.' });
 
             userFollowed.followers.push(followerId);
             await userFollowed.save();
@@ -87,6 +89,26 @@ const userCtrl = {
             const users = await User.find({ _id: req.body.ids });
 
             return res.json({ users });
+        } catch (error: any) {
+            return res.status(400).json({ msg: error.message });
+        }
+    },
+    suggestions: async (req: IReqAuth, res: Response) => {
+        if (!req.user) return res.status(400).json({ msg: "Invalid Authentication" });
+        try {
+
+            const newArr = [...req.user.following, req.user._id];
+            const users = await User.find({ _id: newArr }).populate("followers following", "-password");
+            let result: IUser[] = [];
+            users.forEach((user) => {
+                result.push(...user.followers, ...user.following);
+            });
+
+            const final = [...new Set(result)];
+
+            res.json({ users: final, result: final.length });
+
+
         } catch (error: any) {
             return res.status(400).json({ msg: error.message });
         }

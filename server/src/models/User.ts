@@ -38,7 +38,7 @@ const userSchema = new Schema<IUser>({
     website: { type: String, default: '' },
     followers: [{ type: Schema.Types.ObjectId, ref: 'user' }],
     following: [{ type: Schema.Types.ObjectId, ref: 'user' }],
-    saved: [{ type: Schema.Types.ObjectId, ref: 'user' }]
+    saved: [{ type: Schema.Types.ObjectId, ref: 'post' }]
 }, {
     timestamps: true
 });
