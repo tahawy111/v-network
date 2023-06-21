@@ -9,5 +9,6 @@ router.put(`/:id`, auth, postCtrl.updatePost);
 router.put(`/like/:id`, auth, postCtrl.like);
 router.put(`/unLike/:id`, auth, postCtrl.unLike);
 router.get(`/userPosts/:id`, auth, postCtrl.getUserPosts);
+router.get(`/discover`, postCtrl.getDiscoverPosts);
 
 export default router;

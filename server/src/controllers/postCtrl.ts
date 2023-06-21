@@ -90,8 +90,22 @@ const postCtrl = {
         if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
         const { limit } = Pagination(req);
         try {
-            console.log("userPosts", req.params.id);
             const posts = await Post.find({ user: req.params.id })
+                .populate("user likes", "avatar username fullname")
+                .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
+                .sort({ createdAt: -1 }).limit(limit);
+
+
+            res.json({ posts, postsLength: (await Post.find()).length });
+        } catch (error) {
+
+        }
+    },
+    getDiscoverPosts: async (req: IReqAuth, res: Response) => {
+        // if (!req.user) return res.status(400).json({ msg: "Invalid Authentication." });
+        const { limit } = Pagination(req);
+        try {
+            const posts = await Post.find()
                 .populate("user likes", "avatar username fullname")
                 .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
                 .sort({ createdAt: -1 }).limit(limit);

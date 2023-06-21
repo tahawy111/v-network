@@ -21,7 +21,20 @@ export const getUserPosts = createAsyncThunk(
     async ({ id, access_token, page }: { id: string, access_token: string; page: number; }, thunkAPI) => {
 
         try {
-        const res = await axios.get(`${process.env.API}/api/post/userPosts/${id}?page=${page}&limit=${page * 3}`, { headers: { Authorization: access_token } });
+            const res = await axios.get(`${process.env.API}/api/post/userPosts/${id}?page=${page}&limit=${page * 3}`, { headers: { Authorization: access_token } });
+
+            return thunkAPI.fulfillWithValue(res.data);
+        } catch (error: any) {
+            return thunkAPI.rejectWithValue(getError(error));
+        }
+    }
+);
+export const getDiscoverPosts = createAsyncThunk(
+    "post/getDiscoverPosts",
+    async ({ access_token, page }: { access_token: string; page: number; }, thunkAPI) => {
+
+        try {
+            const res = await axios.get(`${process.env.API}/api/post/discover?page=${page}&limit=${page * 3}`, { headers: { Authorization: access_token } });
 
             return thunkAPI.fulfillWithValue(res.data);
         } catch (error: any) {
@@ -41,6 +54,7 @@ export interface PostState {
     page: number;
     postsLength: number;
     isLoading: boolean;
+    discoverPosts: IPost[];
 }
 
 const initialState: PostState = {
@@ -54,6 +68,7 @@ const initialState: PostState = {
     page: 1,
     postsLength: 0,
     isLoading: false,
+    discoverPosts: [],
 };
 
 export const postSlice = createSlice({
@@ -133,6 +148,27 @@ export const postSlice = createSlice({
         });
         builder.addCase(
             getUserPosts.rejected,
+            (state: PostState, action) => {
+                toast.error(`${action.payload}`);
+                return { ...state, message: action.payload as string, isError: true, isLoading: false };
+            }
+        );
+        // Get Discover Posts
+        builder.addCase(getDiscoverPosts.pending, (state: PostState) => {
+            return { ...state, message: null, isError: false, isLoading: true };
+        });
+        builder.addCase(getDiscoverPosts.fulfilled, (state: PostState, action) => {
+            // toast.success(`${action.payload.msg}`);
+            return {
+                ...state,
+                discoverPosts: action.payload.posts,
+                message: action.payload.msg,
+                postsLength: action.payload.postsLength,
+                isLoading: false
+            };
+        });
+        builder.addCase(
+            getDiscoverPosts.rejected,
             (state: PostState, action) => {
                 toast.error(`${action.payload}`);
                 return { ...state, message: action.payload as string, isError: true, isLoading: false };
