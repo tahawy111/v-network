@@ -89,7 +89,7 @@ export default function CardFooter({ post }: CardFooterProps) {
 
         </div>
 
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" onClick={ auth.user && auth.user.saved.findIndex(p => p._id === post._id) === -1 ? handleSave : handleUnSave } className={ `w-6 h-6 text-2xl text-red-500 ${auth.user?.saved.findIndex(p => p._id === post._id) !== -1 ? "fill-red-500" : "fill-none"}` }>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={ 1.5 } stroke="currentColor" onClick={ auth.user && auth.user?.saved?.findIndex(p => p._id === post._id) === -1 ? handleSave : handleUnSave } className={ `w-6 h-6 text-2xl text-red-500 ${auth.user?.saved?.findIndex(p => p._id === post._id) !== -1 ? "fill-red-500" : "fill-none"}` }>
           <path strokeLinecap="round" strokeLinejoin="round" d="M17.593 3.322c1.1.128 1.907 1.077 1.907 2.185V21L12 17.25 4.5 21V5.507c0-1.108.806-2.057 1.907-2.185a48.507 48.507 0 0111.186 0z" />
         </svg>
 

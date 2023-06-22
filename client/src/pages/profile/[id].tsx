@@ -58,8 +58,10 @@ export default function Profile({ }: ProfileProps) {
             dispatch(getUserPosts({ id: id as string, access_token, page: 1 }));
         }
 
-        access_token && dispatch(getPosts({ access_token: access_token as string, page: post.page + 1 }));
-        dispatch(increasePage(1));
+        if(post.posts.length < 1) {
+            access_token && dispatch(getPosts({ access_token: access_token as string, page: post.page + 1 }));
+            dispatch(increasePage(1));
+        }
 
     }, [id, access_token]);
 
@@ -123,7 +125,7 @@ export default function Profile({ }: ProfileProps) {
                     <CardFooter post={ post } />
                 </div>
             )) }
-            { global.status.statusModalShow && <StatusModal isInHomePage={ false } isInProfilePage /> }
+            { global?.status.statusModalShow && <StatusModal isInHomePage={ false } isInProfilePage /> }
 
             { currentTap === "saved" && loggedUser?.saved && post.posts.filter((p) => loggedUser.saved.findIndex((t) => p._id === t._id) !== -1).map((post, index) => (
                 <div className="w-full shadow-sm rounded-sm border border-gray-300 dark:border-gray-300/30 my-3" key={ index }>

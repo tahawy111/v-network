@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Header from './Header';
 import { useRouter } from 'next/router';
 import { getPosts } from '@/redux/features/post';
-import Spinner from '../Custom-Ui/Spinner';
+import io from "socket.io-client";
 
 interface LayoutProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     children: ReactNode;
@@ -18,7 +18,7 @@ interface LayoutProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, 
 
 const Layout: FC<LayoutProps> = ({ children }) => {
     const { access_token } = useSelector((state: RootState) => state.auth);
-
+    const router = useRouter();
     const dispatch: AppDispatch = useDispatch();
     useEffect(() => {
         const fetchData = async () => {
@@ -31,17 +31,22 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             } catch (error) {
                 localStorage.removeItem("firstLogin");
                 Cookies.remove("refreshtoken", { path: "api/auth/accessToken" });
+                router.push("/login");
             }
         };
 
         fetchData();
+
     }, [dispatch]);
 
     useEffect(() => {
         access_token && dispatch(getPosts({ access_token, page: 1 }));
     }, [dispatch, access_token]);
 
-    const router = useRouter();
+    useEffect(() => {
+        const socket = io();
+        return () => { socket.close(); };
+    }, []);
 
 
     return <div>

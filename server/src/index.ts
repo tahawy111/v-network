@@ -4,13 +4,15 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import routes from "./routes";
+import { Socket, Server } from "socket.io";
+import { createServer } from "http";
 
 // Enable Dotenv
 dotenv.config();
 
 
 // Mongodb Connecting
-mongoose.connect(`${process.env.DATABASE_URL}`).then(() => console.log("DB Connected"))
+mongoose.connect(`${process.env.DATABASE_URL}`).then(() => console.log("DB Connected"));
 
 
 // App Configuration
@@ -22,6 +24,13 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
+// Socket.io
+const http = createServer(app);
+export const io = new Server(http);
+
+io.on("connection", (socket: Socket) => {
+    console.log(socket.id + "connected");
+});
 
 
 // Routing
@@ -29,4 +38,4 @@ routes(app);
 
 // Server Listening
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`App is Listening at http://localhost:${PORT}`));
+http.listen(PORT, () => console.log(`App is Listening at http://localhost:${PORT}`));
