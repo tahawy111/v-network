@@ -44,7 +44,12 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     }, [dispatch, access_token]);
 
     useEffect(() => {
-        const socket = io();
+        const socket = io(`http://localhost:5000`);
+
+        socket.on('connect', () => {
+            console.log('Connected to Socket.io server');
+          });
+          
         return () => { socket.close(); };
     }, []);
 
