@@ -23,6 +23,7 @@ export interface IUser {
 }
 
 export interface IPost {
+    userPosts: any;
     _id: string;
     content: string;
     images: { public_id: string; url: string; }[];

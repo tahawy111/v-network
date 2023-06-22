@@ -79,8 +79,10 @@ const authCtrl = {
     login: async (req: Request, res: Response) => {
         try {
             const { email, password } = req.body;
-            const user = await User.findOne({ email }).populate("followers following saved");
-            // .populate("followers following saved")
+            const user = await User.findOne({ email }).populate({ path: "followers following", select: "-password" })
+                .populate({ path: "saved", populate: { path: "comments", populate: { path: "user" } } })
+                .populate({ path: "saved", populate: { path: "user"} });
+
             if (!user) return res.status(404).json({ msg: "This Username doesn't exists." });
 
             if (!bcrypt.compareSync(password, user.password)) return res.status(404).json({ msg: "Incorrect password" });
@@ -145,10 +147,12 @@ const authCtrl = {
             if (!rf_token) return res.status(400).json({ msg: "Please Login Now!" });
 
             const { id } = <IToken>(verify(rf_token, `${process.env.REFRESH_TOKEN_SECRET}`));
-            
+
             if (!id) return res.status(400).json({ msg: "Please Login Now!" });
-            const user = await User.findById(id).select("-password").populate("followers following saved", '-password');
-            
+            const user = await User.findById(id).select("-password").populate({ path: "followers following", select: "-password" })
+            .populate({ path: "saved", populate: { path: "comments", populate: { path: "user" } } })
+            .populate({ path: "saved", populate: { path: "user"} });
+
             if (!user) return res.status(400).json({ msg: "Please Login Now!" });
             const access_token = generateAccessToken({ id });
 

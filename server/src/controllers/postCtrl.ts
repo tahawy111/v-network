@@ -95,7 +95,7 @@ const postCtrl = {
             const posts = await Post.find({ user: req.params.id })
                 .populate("user likes", "avatar username fullname")
                 .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
-                .sort({ createdAt: -1 }).limit(limit);
+                .sort({ createdAt: -1 })
 
 
             res.json({ posts, postsLength: (await Post.find()).length });
@@ -137,7 +137,8 @@ const postCtrl = {
 
 
 
-            const user = await User.findByIdAndUpdate(req.user._id, { $push: { saved: savedPost?._id } }, { new: true });
+            const user = await User.findByIdAndUpdate(req.user._id, { $push: { saved: savedPost?._id } }, { new: true }).populate("followers following", "-password")
+                .populate({ path: "saved", populate: { path: "user" } });
 
             res.json({ msg: "Post Saved✔✔✔", user });
         } catch (error) {
@@ -151,9 +152,10 @@ const postCtrl = {
 
 
 
-            const user = await User.findByIdAndUpdate(req.user._id, { $pull: { saved: savedPost?._id } }, { new: true });
+            const user = await User.findByIdAndUpdate(req.user._id, { $pull: { saved: savedPost?._id } }, { new: true }).populate("followers following", "-password")
+                .populate({ path: "saved", populate: { path: "user" } });
 
-            res.json({ msg: "Post Saved✔✔✔", user });
+            res.json({ msg: "Post UnSaved✔✔✔", user });
         } catch (error) {
 
         }

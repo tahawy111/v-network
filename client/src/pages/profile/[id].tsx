@@ -8,7 +8,7 @@ import FollowBtn from "@/components/Profile/FollowBtn";
 import ShowFollowers from "@/components/Profile/ShowFollowers";
 import ShowFollowing from "@/components/Profile/showFollowing";
 import { setProfileId, startLoading, stopLoading } from "@/redux/features/global";
-import { getUserPosts, increasePage } from "@/redux/features/post";
+import { getPosts, getUserPosts, increasePage } from "@/redux/features/post";
 import { AppDispatch, RootState } from "@/redux/store";
 import { IPost, IUser } from "@/types/typescript";
 import axios from "axios";
@@ -28,6 +28,7 @@ export default function Profile({ }: ProfileProps) {
     const [userPosts, setUserPosts] = useState<IPost[]>();
     const { user: loggedUser, access_token } = useSelector((state: RootState) => state.auth);
     const { global, post } = useSelector((state: RootState) => state);
+    const [currentTap, setCurrentTap] = useState<string>("posts");
     const [onEdit, setOnEdit] = useState<boolean>(false);
     const [isFollowersOpen, setIsFollowersOpen] = useState<boolean>(false);
     const [isFollowingOpen, setIsFollowingOpen] = useState<boolean>(false);
@@ -57,6 +58,9 @@ export default function Profile({ }: ProfileProps) {
             dispatch(getUserPosts({ id: id as string, access_token, page: 1 }));
         }
 
+        access_token && dispatch(getPosts({ access_token: access_token as string, page: post.page + 1 }));
+        dispatch(increasePage(1));
+
     }, [id, access_token]);
 
     useEffect(() => {
@@ -69,9 +73,11 @@ export default function Profile({ }: ProfileProps) {
         if (post.postsLength === post.posts.length) {
             setBtnHide(true);
         }
-        dispatch(getUserPosts({ access_token: access_token as string, page: post.page + 1, id: id as string }));
+        dispatch(getPosts({ access_token: access_token as string, page: post.page + 1 }));
         dispatch(increasePage(1));
     };
+
+
 
     return <Layout>
         <div className="flex flex-col items-center w-full">
@@ -104,7 +110,13 @@ export default function Profile({ }: ProfileProps) {
                 </div>
             </div>
 
-            { post.userPosts && post.userPosts.map((post, index) => (
+            { loggedUser?._id === id
+                && <div className="border-t border-b dark:border-gray-100/30 w-full flex justify-center">
+                    <button className={ `${currentTap === "posts" ? "opacity-100" : "opacity-50"} uppercase px-3 py-2 text-2xl font-semibold border-t border-b border-gray-400` } onClick={ () => setCurrentTap("posts") }>Posts</button>
+                    <button className={ `${currentTap === "saved" ? "opacity-100" : "opacity-50"} uppercase px-3 py-2 text-2xl font-semibold border-t border-b border-gray-400` } onClick={ () => setCurrentTap("saved") }>Saved</button>
+                </div>
+            }
+            { currentTap === "posts" && post.posts && post.userPosts && post.posts.filter((p) => post.userPosts.findIndex((t) => p._id === t._id) !== -1).map((post, index) => (
                 <div className="w-full shadow-sm rounded-sm border border-gray-300 dark:border-gray-300/30 my-3" key={ index }>
                     <CardHeader inProfile post={ post } />
                     <CardBody post={ post } />
@@ -113,9 +125,17 @@ export default function Profile({ }: ProfileProps) {
             )) }
             { global.status.statusModalShow && <StatusModal isInHomePage={ false } isInProfilePage /> }
 
+            { currentTap === "saved" && loggedUser?.saved && post.posts.filter((p) => loggedUser.saved.findIndex((t) => p._id === t._id) !== -1).map((post, index) => (
+                <div className="w-full shadow-sm rounded-sm border border-gray-300 dark:border-gray-300/30 my-3" key={ index }>
+                    <CardHeader inProfile post={ post } />
+                    <CardBody post={ post } />
+                    <CardFooter post={ post } />
+                </div>
+            )) }
 
 
-            { post.posts.length > 0 && <button onClick={ loadMoreHandler } className={ `btn btn-red my-3 w-fit ${btnHide && "hidden"}` }>{ post.isLoading ? <ClipLoader size={ 15 } color='white' /> : "Load More..." }</button> }
+            { post.posts.length > 0 && currentTap === "posts" && <button onClick={ loadMoreHandler } className={ `btn btn-red my-3 w-fit ${btnHide && "hidden"}` }>{ post.isLoading ? <ClipLoader size={ 15 } color='white' /> : "Load More..." }</button> }
+
 
         </div>
 
