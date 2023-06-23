@@ -24,16 +24,20 @@ app.use(cors({
 }));
 app.use(cookieParser());
 
-// Routing
-routes(app);
+
 
 // Socket.io
 const http = createServer(app);
-export const io = new Server(http);
+export const io = new Server(http, {
+    cors: { origin: "*" },
+});
 
 io.on("connection", (socket: Socket) => {
-    console.log(socket.id + "connected");
+    console.log(socket.id + " Connected");
 });
+
+// Routing
+routes(app);
 
 // Server Listening
 const PORT = process.env.PORT || 5000;
