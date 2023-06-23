@@ -1,5 +1,5 @@
 import { setUser } from '@/redux/features/auth';
-import { startLoading, stopLoading } from '@/redux/features/global';
+import { setSocket, startLoading, stopLoading } from '@/redux/features/global';
 import { AppDispatch, RootState } from '@/redux/store';
 import { getError } from '@/lib/getError';
 import axios from 'axios';
@@ -41,11 +41,12 @@ const Layout: FC<LayoutProps> = ({ children }) => {
 
     useEffect(() => {
         access_token && dispatch(getPosts({ access_token, page: 1 }));
+        const socket = io(`${process.env.API}`);
+        dispatch(setSocket(socket));
+        return () => { socket.close(); };
     }, [dispatch, access_token]);
 
     useEffect(() => {
-        const socket = io(`${process.env.API}`);
-        return () => { socket.close(); };
     }, []);
 
 

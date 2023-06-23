@@ -1,6 +1,7 @@
 "use client";
 
 import { createSlice } from '@reduxjs/toolkit';
+import { Socket } from 'socket.io-client';
 
 
 export interface GlobalState {
@@ -9,6 +10,7 @@ export interface GlobalState {
     statusModalShow: boolean;
   };
   profileId: string;
+  socket: Socket | null;
 }
 
 const initialState: GlobalState = {
@@ -16,7 +18,8 @@ const initialState: GlobalState = {
   status: {
     statusModalShow: false,
   },
-  profileId: ""
+  profileId: "",
+  socket: null
 };
 
 
@@ -36,10 +39,13 @@ export const authSlice = createSlice({
     setProfileId: (state, action) => {
       return { ...state, profileId: action.payload };
     },
+    setSocket: (state, action) => {
+      return { ...state, socket: action.payload };
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { startLoading, stopLoading, setStatusModalShow, setProfileId } = authSlice.actions;
+export const { startLoading, stopLoading, setStatusModalShow, setProfileId, setSocket } = authSlice.actions;
 
 export default authSlice.reducer;
