@@ -4,8 +4,9 @@ import cookieParser from "cookie-parser";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 import routes from "./routes";
-import { Socket, Server } from "socket.io";
+import { Server } from "socket.io";
 import { createServer } from "http";
+import { SocketServer } from "./utils/socket";
 
 // Enable Dotenv
 dotenv.config();
@@ -32,9 +33,7 @@ export const io = new Server(http, {
     cors: { origin: "*" },
 });
 
-io.on("connection", (socket: Socket) => {
-    console.log(socket.id + " Connected");
-});
+io.on("connection", SocketServer);
 
 // Routing
 routes(app);

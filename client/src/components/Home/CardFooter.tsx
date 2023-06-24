@@ -17,14 +17,15 @@ interface CardFooterProps {
 export default function CardFooter({ post }: CardFooterProps) {
   const [isLike, setIsLike] = useState<boolean>(false);
   const [loadLike, setLoadLike] = useState<boolean>(false);
-  const { post: postState, auth } = useSelector((state: RootState) => state);
+  const { post: postState, auth, global: { socket } } = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
   const handleLike = async () => {
     if (loadLike) return;
     setIsLike(true);
     setLoadLike(true);
     dispatch(likePost({ post, auth }));
-    await axios.put(`${process.env.API}/api/post/like/${post._id}`, { likeUserId: auth.user?._id }, { headers: { Authorization: auth.access_token } });
+    const { data } = await axios.put(`${process.env.API}/api/post/like/${post._id}`, { likeUserId: auth.user?._id }, { headers: { Authorization: auth.access_token } });
+    socket?.emit("likePost", data.post);
     setLoadLike(false);
   };
 

@@ -1,15 +1,23 @@
 import { Socket } from "socket.io";
+let users: { id: string; socketId: string; }[] = [];
 
 export const SocketServer = (socket: Socket) => {
-  socket.on("joinRoom", (id: string) => {
-    socket.join(id);
-    // console.log({ joinRoom: (socket as any).adapter.rooms });
+  socket.on("joinUser", (id: string) => {
+    users.push({ id, socketId: socket.id });
   });
-  socket.on("outRoom", (id: string) => {
-    socket.leave(id);
-    // console.log({ outRoom: (socket as any).adapter.rooms });
+  socket.on("disconnect", (id: string) => {
+    users = users.filter(user => user.socketId !== socket.id);
   });
-  socket.on("disconnect", () => {
-    console.log(socket.id + " Disconnect");
+
+  socket.on("likePost", (post) => {
+    console.log(post);
+    const clients = users.filter(user => post.user.followers.includes(user.id));
+
+    if (clients.length > 0) {
+      clients.forEach((client) => {
+        socket.to(`${client.socketId}`).emit("likeToClient", post);
+      });
+    }
+
   });
 };

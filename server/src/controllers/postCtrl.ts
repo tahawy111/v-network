@@ -68,7 +68,7 @@ const postCtrl = {
             const { likeUserId } = req.body;
             const post = await Post.findByIdAndUpdate(req.params.id, {
                 $push: { likes: likeUserId }
-            }, { new: true }).populate("user likes", "avatar username fullname");
+            }, { new: true }).populate("user likes").populate({ path: "comments", populate: { path: "user" } });
 
             res.json({ msg: "Post Updated!", post });
         } catch (error) {
@@ -81,7 +81,7 @@ const postCtrl = {
             const { likeUserId } = req.body;
             const post = await Post.findByIdAndUpdate(req.params.id, {
                 $pull: { likes: likeUserId }
-            }, { new: true }).populate("user likes", "avatar username fullname");
+            }, { new: true }).populate("user likes").populate({ path: "comments", populate: { path: "user" } });
 
             res.json({ msg: "Post Updated!", post });
         } catch (error) {
@@ -95,7 +95,7 @@ const postCtrl = {
             const posts = await Post.find({ user: req.params.id })
                 .populate("user likes", "avatar username fullname")
                 .populate({ path: "comments", populate: { path: "user likes", select: "-password" } })
-                .sort({ createdAt: -1 })
+                .sort({ createdAt: -1 });
 
 
             res.json({ posts, postsLength: (await Post.find()).length });

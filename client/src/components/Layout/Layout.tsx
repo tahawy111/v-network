@@ -11,6 +11,7 @@ import Header from './Header';
 import { useRouter } from 'next/router';
 import { getPosts } from '@/redux/features/post';
 import io from "socket.io-client";
+import SocketClient from '@/lib/SocketClient';
 
 interface LayoutProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
     children: ReactNode;
@@ -54,6 +55,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         {
             <>
                 { access_token && <Header /> }
+                { access_token && <SocketClient /> }
                 <div className='container mx-auto'>
                     { children }
                 </div>
