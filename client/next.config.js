@@ -4,6 +4,9 @@ const nextConfig = {
   env: {
     API: "http://localhost:5000",
   },
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
 };
 
 module.exports = nextConfig;
