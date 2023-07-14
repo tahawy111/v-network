@@ -64,7 +64,7 @@ const Login: FC<LoginProps> = ({ }) => {
                     <button className='btn-primary p-2 w-full'>Login</button>
                 </form>
                 <span className='my-1 inline-block'>
-                    I don't have an account <Link href='/register' className='text-red-500'>Register</Link>
+                    I don&apos;t have an account <Link href='/register' className='text-red-500'>Register</Link>
                 </span>
             </div>
         </div>

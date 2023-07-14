@@ -4,6 +4,6 @@ interface messageProps {
   
 }
 
-export default function message({ }: messageProps) {
+export default function Message({ }: messageProps) {
   return <Layout>message</Layout>
 }

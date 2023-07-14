@@ -13,7 +13,7 @@ interface discoverProps {
 
 }
 
-export default function discover({ }: discoverProps) {
+export default function Discover({ }: discoverProps) {
   const { post, global, auth } = useSelector((state: RootState) => state);
   const dispatch: AppDispatch = useDispatch();
   const [btnHide, setBtnHide] = useState<boolean>(false);
