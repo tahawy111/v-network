@@ -1,0 +1,151 @@
+"use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const User_1 = __importDefault(require("../models/User"));
+const bcrypt_1 = __importDefault(require("bcrypt"));
+const generateToken_1 = require("../utils/generateToken");
+const sendMail_1 = __importDefault(require("../utils/sendMail"));
+const valid_1 = require("../utils/valid");
+const jsonwebtoken_1 = require("jsonwebtoken");
+const authCtrl = {
+    register: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { fullname, username, email, password, gender } = req.body;
+            const newUserName = username.toLowerCase().replace(/ /g, '');
+            const user_name = yield User_1.default.findOne({ username: newUserName });
+            if (user_name)
+                return res.status(400).json({ msg: "This user name already exists." });
+            const user_email = yield User_1.default.findOne({ email });
+            if (user_email)
+                return res.status(400).json({ msg: "This user email already exists." });
+            if (password.length < 6)
+                return res.status(400).json({ msg: "Password must be at least 6 chars." });
+            const passwordHash = bcrypt_1.default.hashSync(password, 10);
+            const newUser = new User_1.default({ fullname, username: newUserName, email, password: passwordHash, gender });
+            console.log(newUser);
+            //    const access_token = 
+            const active_token = (0, generateToken_1.generateActiveToken)({ newUser });
+            const url = `${process.env.CLIENT_URL}/active/${active_token}`;
+            const SENDER_MAIL = `${process.env.SENDER_EMAIL}`;
+            const txt = "Verify Your Email Address";
+            const mailOptions = {
+                from: `"V-NETWORK Email verification" <${SENDER_MAIL}>`,
+                to: email,
+                subject: "V-NETWORK",
+                html: `<div style="max-width: 700px; margin:auto; border-top: 3px solid #d4dadf;border-bottom: 3px solid #d4dadf; padding: 50px 20px; font-size: 110%;font-family:'Cairo', sans-serif;border-radius:20px;">
+            <!--  Font  -->
+              <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900;1000&display=swap" rel="stylesheet">
+            <!--  Font  -->
+              
+                          <h2 style="text-align: center; text-transform: uppercase;color: #1C99E8;">Welcome to the V-NETWORK Website.</h2>
+              <p>Congratulations! You're almost set to start using <a href="${process.env.CLIENT_URL}" target="_blank" rel="noopener noreferrer">V-NETWORK.</a>
+                              Just click the button below to activate your email address!
+                          </p>
+                          
+                          <a href=${url} style="background: #CC0605;border-radius:10px; text-decoration: none; color: white; padding: 10px 20px; margin: 10px 0; display: block;width: fit-content;margin-left: auto;margin-right: auto;">${txt}</a>
+                      
+                          <p>If the button doesn't work for any reason, you can also click on the link below:</p>
+                      
+                          <div>${url}</div>
+                          </div>`,
+            };
+            if (!(0, valid_1.validEmail)(email))
+                return res.status(400).json({ msg: "Invalid Email" });
+            yield (0, sendMail_1.default)(mailOptions);
+            return res.status(200).json({
+                msg: "Register success. Please Check Your Email To Activate Your Account",
+                data: newUser,
+                active_token,
+            });
+        }
+        catch (error) {
+            return res.status(400).json({ msg: error.message });
+        }
+    }),
+    login: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { email, password } = req.body;
+            const user = yield User_1.default.findOne({ email }).populate("followers following");
+            // .populate("followers following")
+            if (!user)
+                return res.status(404).json({ msg: "This Username doesn't exists." });
+            if (!bcrypt_1.default.compareSync(password, user.password))
+                return res.status(404).json({ msg: "Incorrect password" });
+            user.password = "";
+            const access_token = (0, generateToken_1.generateAccessToken)({ id: user._id });
+            const refresh_token = (0, generateToken_1.generateRefreshToken)({ id: user._id });
+            res.cookie('refreshtoken', refresh_token, {
+                httpOnly: true,
+                path: 'api/auth',
+                maxAge: 30 * 24 * 60 * 60 * 1000 // 30 days
+            });
+            res.json({ msg: "Login Success!", refresh_token, user });
+        }
+        catch (error) {
+            return res.status(400).json({ msg: error.message });
+        }
+    }),
+    active: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            const { active_token } = req.body;
+            if (!active_token)
+                return res.status(403).json({ msg: "Please add your token!" });
+            const decoded = ((0, jsonwebtoken_1.verify)(active_token, `${process.env.ACTIVE_TOKEN_SECRET}`));
+            const { newUser } = decoded;
+            if (!newUser)
+                return res.status(400).json({ msg: "Invalid authentication" });
+            const user = new User_1.default(newUser);
+            yield user.save();
+            return res.status(201).json({ msg: "Account has been activated!" });
+        }
+        catch (error) {
+            if (error.code === 11000)
+                return res.status(403).json({ msg: "Account is already exist!" });
+            if (error.name === "TokenExpiredError")
+                return res
+                    .status(403)
+                    .json({ msg: "Token is expired please try again!" });
+        }
+    }),
+    // logout: async (req: Request, res: Response) => {
+    //     try {
+    //         res.clearCookie("refreshtoken", { path: 'api/auth' });
+    //         return res.json({ msg: "Logged out!" });
+    //     } catch (error: any) {
+    //         return res.status(400).json({ msg: error.message });
+    //     }
+    // },
+    generateAccessToken: (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+        try {
+            // console.log(req.cookies.refreshtoken);
+            const rf_token = req.cookies.refreshtoken;
+            if (!rf_token)
+                return res.status(400).json({ msg: "Please Login Now!" });
+            const { id } = ((0, jsonwebtoken_1.verify)(rf_token, `${process.env.REFRESH_TOKEN_SECRET}`));
+            if (!id)
+                return res.status(400).json({ msg: "Please Login Now!" });
+            const user = yield User_1.default.findById(id).select("-password").populate("followers following", '-password');
+            if (!user)
+                return res.status(400).json({ msg: "Please Login Now!" });
+            const access_token = (0, generateToken_1.generateAccessToken)({ id });
+            return res.json({ user, access_token });
+        }
+        catch (error) {
+            return res.status(400).json({ msg: error.message });
+        }
+    }),
+};
+exports.default = authCtrl;
