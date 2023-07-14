@@ -46,3 +46,5 @@ export interface IComment {
     createdAt: Date;
 }
 
+
+export type ImgType = { url: string; public_id: string; }

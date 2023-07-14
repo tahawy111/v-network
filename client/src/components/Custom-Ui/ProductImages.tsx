@@ -1,5 +1,5 @@
 import getThis from '@/lib/getThis';
-import { ImgType } from '@/models/Order';
+import { ImgType } from '@/types/typescript';
 import Image from 'next/image';
 import { FC, useId, useState } from 'react';
 
