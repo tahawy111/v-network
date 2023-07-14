@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: false,
   env: {
-    API: "v-network-server-tahawy.vercel.app",
+    API: "http://v-network-server-tahawy.vercel.app",
   },
   eslint: {
     ignoreDuringBuilds: true,
